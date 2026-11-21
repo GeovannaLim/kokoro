@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kokoro 心
 
-## Getting Started
+Plataforma de saúde mental organizacional: pesquisa anônima, três índices de cultura (apoio, estigma e abertura), perfis de equipe, assistente com IA e relatório NR-1 para o RH agir com segurança.
 
-First, run the development server:
+Projeto para o **Hack Brasil 2026**, trilha Saúde & bem-estar.
+
+## Dados
+
+- **A demo usa só dados sintéticos.** A "Empresa Aurora", as áreas e as 308 respostas são fictícias (`analytics/generate_synthetic.py`).
+- Os dados sintéticos são **calibrados** na pesquisa pública *OSMI Mental Health in Tech Survey 2016* (1.433 respostas reais, licença CC BY 4.0): distribuição de cada resposta e correlação entre perguntas, por cópula gaussiana. Nenhuma linha individual da OSMI entra no app; só agregados (`analytics/osmi_calibration.json`).
+- Os perfis de equipe (K-means, k=3) são treinados nos índices das respostas reais da OSMI e aplicados às respostas da empresa.
+- Nenhum recorte com menos de 5 pessoas é exibido. O Kokoro não faz diagnóstico individual.
+
+## Rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000  ·  plataforma em /plataforma
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Regenerar os dados (Python 3.12 com pandas, numpy, scipy, scikit-learn; a OSMI 2016 em CSV):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+python analytics/osmi_calibration.py caminho/para/osmi-2016.csv
+python analytics/generate_synthetic.py
+python analytics/build_dashboard_data.py
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estética
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Marfim washi, tinta sumi, índigo e vermelho; só três fontes (Cormorant Garamond, Jost e Shippori Mincho); botões em pílula, carimbos hanko e ondas seigaiha. Mascote: Kokoro, o robô de cachecol.

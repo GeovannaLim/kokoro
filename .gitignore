@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# analytics (dados gerados localmente; o JSON agregado vai em src/data)
+/analytics/out/
+__pycache__/

@@ -1,0 +1,408 @@
+{
+ "empresa": "Empresa Aurora",
+ "periodo": "Nov 2026",
+ "sintetico": true,
+ "min_grupo": 5,
+ "total": {
+  "n": 308,
+  "indices": {
+   "apoio": 48.6,
+   "estigma": 35.1,
+   "abertura": 46.6
+  },
+  "perfis": {
+   "acolhidos": 39.3,
+   "sem_apoio": 20.8,
+   "em_silencio": 39.9
+  }
+ },
+ "areas": {
+  "Produto": {
+   "n": 58,
+   "indices": {
+    "apoio": 70.0,
+    "estigma": 24.4,
+    "abertura": 60.9
+   },
+   "perfis": {
+    "acolhidos": 75.9,
+    "sem_apoio": 10.3,
+    "em_silencio": 13.8
+   }
+  },
+  "Engenharia": {
+   "n": 84,
+   "indices": {
+    "apoio": 54.0,
+    "estigma": 27.3,
+    "abertura": 55.9
+   },
+   "perfis": {
+    "acolhidos": 52.4,
+    "sem_apoio": 26.2,
+    "em_silencio": 21.4
+   }
+  },
+  "Comercial": {
+   "n": 62,
+   "indices": {
+    "apoio": 34.8,
+    "estigma": 45.2,
+    "abertura": 30.7
+   },
+   "perfis": {
+    "acolhidos": 12.9,
+    "sem_apoio": 16.1,
+    "em_silencio": 71.0
+   }
+  },
+  "Operações": {
+   "n": 46,
+   "indices": {
+    "apoio": 33.9,
+    "estigma": 45.3,
+    "abertura": 37.2
+   },
+   "perfis": {
+    "acolhidos": 8.7,
+    "sem_apoio": 37.0,
+    "em_silencio": 54.3
+   }
+  },
+  "Atendimento": {
+   "n": 40,
+   "indices": {
+    "apoio": 35.0,
+    "estigma": 44.3,
+    "abertura": 36.0
+   },
+   "perfis": {
+    "acolhidos": 20.0,
+    "sem_apoio": 20.0,
+    "em_silencio": 60.0
+   }
+  },
+  "RH": {
+   "n": 18,
+   "indices": {
+    "apoio": 70.0,
+    "estigma": 24.8,
+    "abertura": 60.0
+   },
+   "perfis": {
+    "acolhidos": 72.2,
+    "sem_apoio": 5.6,
+    "em_silencio": 22.2
+   }
+  }
+ },
+ "modelo": {
+  "Híbrido": {
+   "n": 158,
+   "indices": {
+    "apoio": 46.6,
+    "estigma": 36.1,
+    "abertura": 44.1
+   },
+   "perfis": {
+    "acolhidos": 33.5,
+    "sem_apoio": 20.9,
+    "em_silencio": 45.6
+   }
+  },
+  "Remoto": {
+   "n": 71,
+   "indices": {
+    "apoio": 51.8,
+    "estigma": 37.3,
+    "abertura": 48.2
+   },
+   "perfis": {
+    "acolhidos": 45.1,
+    "sem_apoio": 19.7,
+    "em_silencio": 35.2
+   }
+  },
+  "Presencial": {
+   "n": 79,
+   "indices": {
+    "apoio": 49.9,
+    "estigma": 31.2,
+    "abertura": 50.3
+   },
+   "perfis": {
+    "acolhidos": 45.6,
+    "sem_apoio": 21.5,
+    "em_silencio": 32.9
+   }
+  }
+ },
+ "tempo_casa": {
+  "Mais de 5 anos": {
+   "n": 47,
+   "indices": {
+    "apoio": 51.5,
+    "estigma": 34.8,
+    "abertura": 46.4
+   },
+   "perfis": {
+    "acolhidos": 42.6,
+    "sem_apoio": 19.1,
+    "em_silencio": 38.3
+   }
+  },
+  "Menos de 1 ano": {
+   "n": 65,
+   "indices": {
+    "apoio": 50.5,
+    "estigma": 35.4,
+    "abertura": 42.9
+   },
+   "perfis": {
+    "acolhidos": 40.0,
+    "sem_apoio": 18.5,
+    "em_silencio": 41.5
+   }
+  },
+  "1 a 3 anos": {
+   "n": 138,
+   "indices": {
+    "apoio": 51.2,
+    "estigma": 36.3,
+    "abertura": 47.6
+   },
+   "perfis": {
+    "acolhidos": 41.3,
+    "sem_apoio": 19.6,
+    "em_silencio": 39.1
+   }
+  },
+  "3 a 5 anos": {
+   "n": 58,
+   "indices": {
+    "apoio": 38.3,
+    "estigma": 32.1,
+    "abertura": 48.6
+   },
+   "perfis": {
+    "acolhidos": 31.0,
+    "sem_apoio": 27.6,
+    "em_silencio": 41.4
+   }
+  }
+ },
+ "perfis_def": [
+  {
+   "id": "acolhidos",
+   "nome": "Acolhidos",
+   "descricao": "Sentem apoio e falam com mais liberdade.",
+   "centro": {
+    "apoio": 79.3,
+    "estigma": 22.8,
+    "abertura": 68.1
+   }
+  },
+  {
+   "id": "sem_apoio",
+   "nome": "Abertos, sem apoio",
+   "descricao": "Falam com liberdade, mas quase não encontram estrutura de apoio.",
+   "centro": {
+    "apoio": 9.3,
+    "estigma": 19.7,
+    "abertura": 69.8
+   }
+  },
+  {
+   "id": "em_silencio",
+   "nome": "Em silêncio",
+   "descricao": "Percebem pouco apoio e muito risco em se abrir.",
+   "centro": {
+    "apoio": 21.3,
+    "estigma": 42.2,
+    "abertura": 14.6
+   }
+  }
+ ],
+ "referencia_osmi": {
+  "n": 1127,
+  "indices": {
+   "apoio": 40.9,
+   "estigma": 28.7,
+   "abertura": 50.1
+  }
+ },
+ "perguntas": [
+  {
+   "id": "apoio_beneficio",
+   "indice": "apoio",
+   "texto": "A empresa oferece benefício de saúde mental no plano de saúde?",
+   "media": 67.5,
+   "distribuicao": {
+    "0": 32.5,
+    "1": 67.5
+   }
+  },
+  {
+   "id": "apoio_conhece",
+   "indice": "apoio",
+   "texto": "Você conhece as opções de cuidado em saúde mental que o seu plano cobre?",
+   "media": 44.5,
+   "distribuicao": {
+    "0": 55.5,
+    "1": 44.5
+   }
+  },
+  {
+   "id": "apoio_discutiu",
+   "indice": "apoio",
+   "texto": "A empresa já falou formalmente sobre saúde mental (campanha, comunicado)?",
+   "media": 21.1,
+   "distribuicao": {
+    "0": 78.9,
+    "1": 21.1
+   }
+  },
+  {
+   "id": "apoio_recursos",
+   "indice": "apoio",
+   "texto": "A empresa oferece materiais para entender saúde mental e onde buscar ajuda?",
+   "media": 37.0,
+   "distribuicao": {
+    "0": 63.0,
+    "1": 37.0
+   }
+  },
+  {
+   "id": "apoio_anonimato",
+   "indice": "apoio",
+   "texto": "Seu anonimato é protegido se você usar os recursos de cuidado da empresa?",
+   "media": 73.1,
+   "distribuicao": {
+    "0": 26.9,
+    "1": 73.1
+   }
+  },
+  {
+   "id": "estigma_consequencia",
+   "indice": "estigma",
+   "texto": "Falar de um transtorno mental com a empresa traria consequências negativas?",
+   "media": 46.8,
+   "distribuicao": {
+    "0": 33.8,
+    "0.5": 39.0,
+    "1": 27.3
+   }
+  },
+  {
+   "id": "estigma_fisica",
+   "indice": "estigma",
+   "texto": "Falar de um problema de saúde física com a empresa traria consequências negativas?",
+   "media": 19.0,
+   "distribuicao": {
+    "0": 68.5,
+    "0.5": 25.0,
+    "1": 6.5
+   }
+  },
+  {
+   "id": "estigma_colegas",
+   "indice": "estigma",
+   "texto": "Você já viu colegas sofrerem consequências por falar abertamente de saúde mental aqui?",
+   "media": 11.0,
+   "distribuicao": {
+    "0": 89.0,
+    "1": 11.0
+   }
+  },
+  {
+   "id": "estigma_anterior",
+   "indice": "estigma",
+   "texto": "Em empregos anteriores, falar de saúde mental traria consequências negativas?",
+   "media": 58.4,
+   "distribuicao": {
+    "0": 10.1,
+    "0.5": 63.0,
+    "1": 26.9
+   }
+  },
+  {
+   "id": "estigma_colegas_antes",
+   "indice": "estigma",
+   "texto": "Em empregos anteriores, você viu colegas sofrerem consequências por isso?",
+   "media": 26.9,
+   "distribuicao": {
+    "0": 54.5,
+    "0.5": 37.0,
+    "1": 8.4
+   }
+  },
+  {
+   "id": "estigma_licenca",
+   "indice": "estigma",
+   "texto": "Se precisasse de afastamento por saúde mental, pedir seria:",
+   "media": 48.4,
+   "distribuicao": {
+    "0": 20.5,
+    "0.25": 24.0,
+    "0.5": 16.2,
+    "0.75": 20.1,
+    "1": 19.2
+   }
+  },
+  {
+   "id": "abertura_colegas",
+   "indice": "abertura",
+   "texto": "Você se sentiria à vontade para falar de saúde mental com colegas?",
+   "media": 44.2,
+   "distribuicao": {
+    "0": 36.0,
+    "0.5": 39.6,
+    "1": 24.4
+   }
+  },
+  {
+   "id": "abertura_lideranca",
+   "indice": "abertura",
+   "texto": "Você se sentiria à vontade para falar de saúde mental com sua liderança?",
+   "media": 51.6,
+   "distribuicao": {
+    "0": 32.1,
+    "0.5": 32.5,
+    "1": 35.4
+   }
+  },
+  {
+   "id": "abertura_seriedade",
+   "indice": "abertura",
+   "texto": "A empresa leva saúde mental tão a sério quanto a física?",
+   "media": 51.9,
+   "distribuicao": {
+    "0": 48.1,
+    "1": 51.9
+   }
+  },
+  {
+   "id": "abertura_revela",
+   "indice": "abertura",
+   "texto": "Se você tivesse um diagnóstico, contaria para colegas?",
+   "media": 37.1,
+   "distribuicao": {
+    "0": 31.2,
+    "0.25": 7.5,
+    "0.5": 52.3,
+    "1": 9.1
+   }
+  },
+  {
+   "id": "abertura_observou",
+   "indice": "abertura",
+   "texto": "O que você viu acontecer com outras pessoas te deixou com menos vontade de se abrir aqui?",
+   "media": 48.4,
+   "distribuicao": {
+    "0": 38.3,
+    "0.5": 26.6,
+    "1": 35.1
+   }
+  }
+ ]
+}
