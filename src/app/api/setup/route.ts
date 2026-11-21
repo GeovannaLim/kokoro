@@ -15,6 +15,10 @@ export async function POST(req: Request) {
   const token = process.env.KK_SETUP_TOKEN;
   if (!token || req.headers.get("x-setup-token") !== token) return new Response("não autorizado", { status: 401 });
   if (!sql) return new Response("sem DATABASE_URL", { status: 500 });
+  if (new URL(req.url).searchParams.get("limpar_teste") === "1") {
+    const apagadas = (await sql`delete from respostas where not sintetica returning id`).length;
+    return Response.json({ ok: true, apagadas });
+  }
   for (const s of SCHEMA) await sql.query(s);
   const [emp] = (await sql`insert into empresas (slug, nome, areas) values ('aurora', ${seed.empresa}, ${seed.areas})
     on conflict (slug) do update set nome = excluded.nome, areas = excluded.areas returning id`) as { id: number }[];
