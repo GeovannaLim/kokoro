@@ -62,7 +62,7 @@ const PT: SiteText = {
     stack: "Python · pandas · scikit-learn",
     codigo: ["Código aberto", "Pipeline em Python, do tratamento dos dados aos índices de cultura e aos perfis de equipe. Repositório público no GitHub."],
     apresentacao: "Apresentação", anterior: "Slide anterior", proximo: "Próximo slide",
-    slidesAlt: ["Kokoro: escute sua equipe, cuide da cultura", "Problema: 546 mil afastamentos por transtornos mentais em 2025", "Solução: pesquisa, índices, perfis e plano, relatório NR-1", "Por que agora: a NR-1 exige avaliar riscos psicossociais desde 26/05/2026", "Mercado: 57,1 milhões de vínculos formais", "Concorrência", "Produto: telas da plataforma", "Por dentro: dados reais da OSMI e privacidade", "Modelo de negócio: software por pessoa por mês", "Impacto: da escuta à ação", "Equipe: Geovanna Lim", "Próximos passos"],
+    slidesAlt: ["Kokoro: escute sua equipe, cuide da cultura", "Problema: 546 mil afastamentos por transtornos mentais em 2025, cerca de R$ 1 bi pagos pelo INSS", "Solução: pesquisa, índices, perfis e plano, relatório NR-1", "Por que agora: a NR-1 exige avaliar riscos psicossociais desde 26/05/2026", "Mercado: 57,1 milhões de vínculos formais", "Concorrência", "Produto: telas da plataforma", "Por dentro: dados reais da OSMI e privacidade", "Modelo de negócio: software por pessoa por mês", "Impacto: da escuta à ação", "Equipe: Geovanna Lim", "Próximos passos"],
   },
   sobre: {
     hero: { l1: "Empresas onde é seguro", l2a: "falar de", l2b: "saúde mental." },
@@ -108,7 +108,7 @@ const EN: SiteText = {
     stack: "Python · pandas · scikit-learn",
     codigo: ["Open source", "A Python pipeline, from data cleaning to culture indexes and team profiles. Public GitHub repository."],
     apresentacao: "Presentation", anterior: "Previous slide", proximo: "Next slide",
-    slidesAlt: ["Kokoro: listen to your team, care for the culture", "Problem: 546k sick leaves for mental disorders in 2025", "Solution: survey, indexes, profiles and plan, NR-1 report", "Why now: NR-1 requires assessing psychosocial risks since May 26, 2026", "Market: 57.1 million formal jobs", "Competition", "Product: platform screens", "Under the hood: real OSMI data and privacy", "Business model: software per person per month", "Impact: from listening to action", "Team: Geovanna Lim", "Next steps"],
+    slidesAlt: ["Kokoro: listen to your team, care for the culture", "Problem: 546k sick leaves for mental disorders in 2025, about R$ 1B paid by the INSS", "Solution: survey, indexes, profiles and plan, NR-1 report", "Why now: NR-1 requires assessing psychosocial risks since May 26, 2026", "Market: 57.1 million formal jobs", "Competition", "Product: platform screens", "Under the hood: real OSMI data and privacy", "Business model: software per person per month", "Impact: from listening to action", "Team: Geovanna Lim", "Next steps"],
   },
   sobre: {
     hero: { l1: "Companies where it's safe", l2a: "to talk about", l2b: "mental health." },
@@ -154,7 +154,7 @@ const ES: SiteText = {
     stack: "Python · pandas · scikit-learn",
     codigo: ["Código abierto", "Pipeline en Python, del tratamiento de los datos a los índices de cultura y los perfiles de equipo. Repositorio público en GitHub."],
     apresentacao: "Presentación", anterior: "Diapositiva anterior", proximo: "Siguiente diapositiva",
-    slidesAlt: ["Kokoro: escucha a tu equipo, cuida la cultura", "Problema: 546 mil bajas por trastornos mentales en 2025", "Solución: encuesta, índices, perfiles y plan, informe NR-1", "Por qué ahora: la NR-1 exige evaluar los riesgos psicosociales desde el 26/05/2026", "Mercado: 57,1 millones de empleos formales", "Competencia", "Producto: pantallas de la plataforma", "Por dentro: datos reales de la OSMI y privacidad", "Modelo de negocio: software por persona al mes", "Impacto: de la escucha a la acción", "Equipo: Geovanna Lim", "Próximos pasos"],
+    slidesAlt: ["Kokoro: escucha a tu equipo, cuida la cultura", "Problema: 546 mil bajas por trastornos mentales en 2025, unos R$ 1.000 M pagados por el INSS", "Solución: encuesta, índices, perfiles y plan, informe NR-1", "Por qué ahora: la NR-1 exige evaluar los riesgos psicosociales desde el 26/05/2026", "Mercado: 57,1 millones de empleos formales", "Competencia", "Producto: pantallas de la plataforma", "Por dentro: datos reales de la OSMI y privacidad", "Modelo de negocio: software por persona al mes", "Impacto: de la escucha a la acción", "Equipo: Geovanna Lim", "Próximos pasos"],
   },
   sobre: {
     hero: { l1: "Empresas donde es seguro", l2a: "hablar de", l2b: "salud mental." },
