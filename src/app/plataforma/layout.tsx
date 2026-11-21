@@ -13,7 +13,6 @@ async function Header() {
   const items = [
     { href: "/plataforma", label: t(lang, "nav_dashboard") },
     { href: "/plataforma/pesquisa", label: t(lang, "nav_pesquisa") },
-    { href: "/plataforma/assistente", label: t(lang, "nav_assistente") },
     { href: "/plataforma/perfis", label: t(lang, "nav_perfis") },
     { href: "/plataforma/plano", label: t(lang, "nav_plano") },
     { href: "/plataforma/relatorio", label: t(lang, "nav_relatorio") },

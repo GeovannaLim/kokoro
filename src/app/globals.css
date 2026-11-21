@@ -137,3 +137,17 @@ p {
 
 /* quem prefere menos movimento: gráficos e barras aparecem já prontos */
 @media (prefers-reduced-motion: reduce) { [class*="transition-"] { transition: none !important; } }
+
+/* impressão do Relatório NR-1: só o documento, sem menu, botões ou sombras */
+@media print {
+  @page { size: A4; margin: 14mm; }
+  html, body { background: #ffffff !important; }
+  header, footer:not(.kk-doc footer), .no-print { display: none !important; }
+  main { padding: 0 !important; max-width: none !important; }
+  .kk-doc { box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; max-width: none !important; margin: 0 !important; }
+  .kk-doc header { display: flex !important; }
+  .kk-doc footer { display: block !important; }
+  .kk-doc section, .kk-doc tr { break-inside: avoid; }
+  .kk-stamp, .kk-w, .kk-reveal { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; clip-path: none !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

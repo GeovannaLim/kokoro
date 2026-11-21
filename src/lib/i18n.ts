@@ -158,3 +158,53 @@ export const OPCOES_I18N: Record<string, Record<Exclude<Lang, "pt">, string>> = 
 };
 export const tq = (lang: Lang, id: string, pt: string) => (lang === "pt" ? pt : PERGUNTAS_I18N[id]?.[lang] ?? pt);
 export const to = (lang: Lang, pt: string) => (lang === "pt" ? pt : OPCOES_I18N[pt]?.[lang] ?? VALORES[pt]?.[lang] ?? pt);
+
+/** Textos das telas de Perfis, Plano de ação e Relatório NR-1. */
+export const P = T({
+  // perfis
+  perf_intro: { pt: "Agrupamento K-means treinado em 1.433 respostas reais da OSMI 2016 e aplicado às respostas da empresa.", en: "K-means clustering trained on 1,433 real OSMI 2016 responses and applied to the company's answers.", es: "Agrupamiento K-means entrenado con 1.433 respuestas reales de OSMI 2016 y aplicado a las respuestas de la empresa." },
+  perf_retrato: { pt: "Retrato do grupo", en: "Group portrait", es: "Retrato del grupo" },
+  perf_fazer: { pt: "O que fazer", en: "What to do", es: "Qué hacer" },
+  perf_fazer_acolhidos: { pt: "Transformar em aliados: convidar para rodas de conversa e para contar experiências, com consentimento.", en: "Turn them into allies: invite them to conversation circles and to share experiences, with consent.", es: "Convertirlos en aliados: invitarlos a rondas de conversación y a contar experiencias, con consentimiento." },
+  perf_fazer_sem_apoio: { pt: "Já falam: falta estrutura. Divulgar o plano de saúde, o canal de apoio e o sigilo garantido.", en: "They already speak up: what's missing is structure. Promote the health plan, the support channel and guaranteed confidentiality.", es: "Ya hablan: falta estructura. Difundir el plan de salud, el canal de apoyo y la confidencialidad garantizada." },
+  perf_fazer_em_silencio: { pt: "Primeiro, segurança: política contra retaliação, líderes dando o exemplo e apoio sigiloso.", en: "Safety first: anti-retaliation policy, leaders setting the example and confidential support.", es: "Primero, seguridad: política contra represalias, líderes dando el ejemplo y apoyo confidencial." },
+  perf_recortes: { pt: "Perfis por recorte", en: "Profiles by breakdown", es: "Perfiles por desglose" },
+  perf_por_area: { pt: "Por área", en: "By area", es: "Por área" },
+  perf_por_modelo: { pt: "Por modelo de trabalho", en: "By work arrangement", es: "Por modalidad de trabajo" },
+  perf_por_tempo: { pt: "Por tempo de casa", en: "By tenure", es: "Por antigüedad" },
+  // plano
+  plano_intro: { pt: "Gerado a partir das perguntas com pior resultado e das áreas prioritárias. Marque o que já foi feito.", en: "Built from the worst-scoring questions and the priority areas. Check off what's done.", es: "Generado a partir de las preguntas con peor resultado y las áreas prioritarias. Marca lo que ya está hecho." },
+  plano_acoes: { pt: "ações", en: "actions", es: "acciones" },
+  plano_feitas: { pt: "feitas", en: "done", es: "hechas" },
+  plano_areas: { pt: "Áreas prioritárias", en: "Priority areas", es: "Áreas prioritarias" },
+  plano_dias: { pt: "dias", en: "days", es: "días" },
+  plano_dono: { pt: "Responsável", en: "Owner", es: "Responsable" },
+  plano_evid_pergunta: { pt: "Pergunta", en: "Question", es: "Pregunta" },
+  plano_evid_area: { pt: "Área", en: "Area", es: "Área" },
+  plano_feito: { pt: "Feito", en: "Done", es: "Hecho" },
+  plano_marcar: { pt: "Marcar como feito", en: "Mark as done", es: "Marcar como hecho" },
+  // relatório
+  rel_gerar: { pt: "Gerar PDF", en: "Create PDF", es: "Generar PDF" },
+  rel_dica: { pt: "Na janela de impressão, escolha \"Salvar como PDF\".", en: "In the print dialog, choose \"Save as PDF\".", es: "En la ventana de impresión, elige \"Guardar como PDF\"." },
+  rel_titulo: { pt: "Relatório de riscos psicossociais", en: "Psychosocial risk report", es: "Informe de riesgos psicosociales" },
+  rel_sub: { pt: "Apoio ao inventário de riscos do PGR · NR-1", en: "Support for the PGR risk inventory · NR-1 (Brazil)", es: "Apoyo al inventario de riesgos del PGR · NR-1 (Brasil)" },
+  rel_empresa: { pt: "Empresa", en: "Company", es: "Empresa" },
+  rel_periodo: { pt: "Período da pesquisa", en: "Survey period", es: "Periodo de la encuesta" },
+  rel_emissao: { pt: "Emitido em", en: "Issued on", es: "Emitido el" },
+  rel_s1: { pt: "1. Metodologia", en: "1. Methodology", es: "1. Metodología" },
+  rel_metodo: { pt: "Pesquisa anônima de 20 perguntas (16 de cultura e 4 de contexto), respondida por {n} pessoas. As respostas formam três índices de 0 a 100: Apoio, Estigma e Abertura, e as pessoas são agrupadas em perfis por um modelo K-means treinado em 1.433 respostas reais da OSMI 2016. Nenhum recorte com menos de 5 pessoas é exibido e nenhuma pessoa é identificada.", en: "Anonymous 20-question survey (16 on culture, 4 on context), answered by {n} people. Answers form three 0–100 indexes: Support, Stigma and Openness, and people are grouped into profiles by a K-means model trained on 1,433 real OSMI 2016 responses. No breakdown with fewer than 5 people is shown and no one is identified.", es: "Encuesta anónima de 20 preguntas (16 de cultura y 4 de contexto), respondida por {n} personas. Las respuestas forman tres índices de 0 a 100: Apoyo, Estigma y Apertura, y las personas se agrupan en perfiles con un modelo K-means entrenado con 1.433 respuestas reales de OSMI 2016. No se muestra ningún desglose con menos de 5 personas y nadie es identificado." },
+  rel_sintetico: { pt: "Este relatório usa dados sintéticos de demonstração.", en: "This report uses synthetic demo data.", es: "Este informe usa datos sintéticos de demostración." },
+  rel_s2: { pt: "2. Resultado geral", en: "2. Overall result", es: "2. Resultado general" },
+  rel_s3: { pt: "3. Matriz de risco por área", en: "3. Risk matrix by area", es: "3. Matriz de riesgo por área" },
+  rel_faixas: { pt: "Faixas: Apoio e Abertura abaixo de 40 = alto, 40–60 = moderado; Estigma a partir de 45 = alto, 30–45 = moderado.", en: "Bands: Support and Openness below 40 = high, 40–60 = moderate; Stigma 45+ = high, 30–45 = moderate.", es: "Rangos: Apoyo y Apertura por debajo de 40 = alto, 40–60 = moderado; Estigma desde 45 = alto, 30–45 = moderado." },
+  rel_s4: { pt: "4. Fatores de risco identificados", en: "4. Risk factors identified", es: "4. Factores de riesgo identificados" },
+  rel_areas_afetadas: { pt: "Áreas com risco alto", en: "Areas at high risk", es: "Áreas con riesgo alto" },
+  rel_nenhuma: { pt: "nenhuma", en: "none", es: "ninguna" },
+  rel_s5: { pt: "5. Plano de ação", en: "5. Action plan", es: "5. Plan de acción" },
+  rel_prazo: { pt: "Prazo", en: "Deadline", es: "Plazo" },
+  rel_acao: { pt: "Ação", en: "Action", es: "Acción" },
+  rel_aviso: { pt: "Este relatório apoia o inventário de riscos psicossociais do Programa de Gerenciamento de Riscos (PGR) previsto na NR-1. Ele não faz diagnóstico individual e não substitui a avaliação de um profissional habilitado.", en: "This report supports the psychosocial risk inventory of the Risk Management Program (PGR) required by Brazil's NR-1. It makes no individual diagnosis and does not replace an assessment by a qualified professional.", es: "Este informe apoya el inventario de riesgos psicosociales del Programa de Gestión de Riesgos (PGR) previsto en la NR-1 de Brasil. No hace diagnósticos individuales y no sustituye la evaluación de un profesional habilitado." },
+  rel_ass_tecnico: { pt: "Responsável técnico (SST)", en: "Technical lead (OHS)", es: "Responsable técnico (SST)" },
+  rel_ass_rh: { pt: "Responsável de RH", en: "HR lead", es: "Responsable de RR. HH." },
+});
+export const tp = (lang: Lang, k: keyof typeof P) => P[k][lang];
