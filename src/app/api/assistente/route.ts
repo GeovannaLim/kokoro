@@ -5,7 +5,7 @@ import { LANGS, type Lang } from "@/lib/i18n";
 /** Assistente: API gratuita da NVIDIA (build.nvidia.com, compatível com o formato OpenAI).
  *  Sem NVIDIA_API_KEY, responde em modo demonstração com os próprios números. */
 const URL_NVIDIA = "https://integrate.api.nvidia.com/v1/chat/completions";
-const MODELO = process.env.NVIDIA_MODEL || "meta/llama-3.3-70b-instruct";
+const MODELO = process.env.NVIDIA_MODEL || "google/gemma-4-31b-it";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
