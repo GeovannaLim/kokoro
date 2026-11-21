@@ -129,3 +129,11 @@ p {
   .kk-w, .kk-stroke path, .kk-stamp, .kk-waves::before, .kk-bob { animation: none !important; stroke-dashoffset: 0; }
   .kk-reveal { opacity: 1; transform: none; filter: none; }
 }
+
+/* menu da plataforma: itens entram em cascata quando o painel abre */
+.kk-menu-in { animation: kk-menu-in .6s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes kk-menu-in { from { opacity: 0; transform: translateX(24px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .kk-menu-in { animation: none; } }
+
+/* quem prefere menos movimento: gráficos e barras aparecem já prontos */
+@media (prefers-reduced-motion: reduce) { [class*="transition-"] { transition: none !important; } }

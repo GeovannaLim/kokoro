@@ -1,16 +1,17 @@
 "use client";
 import Image from "next/image";
 import { useState, useTransition } from "react";
+import { t, to, tq, tv, type Lang } from "@/lib/i18n";
 import { CONTEXTO, PERGUNTAS } from "@/lib/questions";
 import { enviarResposta } from "./actions";
 
 type Passo = { id: string; texto: string; opcoes: { label: string; value: string | number | null }[]; tipo: "contexto" | "cultura" };
 
-export function SurveyForm({ token, empresa, areas }: { token: string; empresa: string; areas: string[] }) {
+export function SurveyForm({ token, empresa, areas, lang }: { token: string; empresa: string; areas: string[]; lang: Lang }) {
   const passos: Passo[] = [
-    ...CONTEXTO.map((c) => ({ id: c.id, texto: c.texto, tipo: "contexto" as const,
-      opcoes: ("opcoes" in c ? [...c.opcoes] : areas).map((o) => ({ label: o, value: o })) })),
-    ...PERGUNTAS.map((q) => ({ id: q.id, texto: q.texto, tipo: "cultura" as const, opcoes: q.opcoes.map((o) => ({ label: o.label, value: o.code })) })),
+    ...CONTEXTO.map((c) => ({ id: c.id, texto: tq(lang, c.id, c.texto), tipo: "contexto" as const,
+      opcoes: ("opcoes" in c ? [...c.opcoes] : areas).map((o) => ({ label: tv(lang, o), value: o })) })),
+    ...PERGUNTAS.map((q) => ({ id: q.id, texto: tq(lang, q.id, q.texto), tipo: "cultura" as const, opcoes: q.opcoes.map((o) => ({ label: to(lang, o.label), value: o.code })) })),
   ];
   const [i, setI] = useState(-1);
   const [ctx, setCtx] = useState<Record<string, string>>({});
@@ -35,9 +36,9 @@ export function SurveyForm({ token, empresa, areas }: { token: string; empresa: 
   if (fim) return (
     <div className="kk-reveal is-in mx-auto max-w-lg text-center">
       <Image src="/brand/kokoro-ai-flat.png" alt="" width={220} height={220} className="kk-bob mx-auto w-44" />
-      <h1 className="mt-6 font-serif text-5xl">Obrigado.</h1>
-      <p className="mt-4 text-sumi-soft">Sua resposta é anônima e só aparece somada às de pelo menos outras 4 pessoas.</p>
-      <p className="mt-10 text-xs text-stone">Em sofrimento agora? Ligue 188 (CVV), 24 horas, gratuito.</p>
+      <h1 className="mt-6 font-serif text-5xl">{t(lang, "form_obrigado")}</h1>
+      <p className="mt-4 text-sumi-soft">{t(lang, "form_obrigado_txt")}</p>
+      <p className="mt-10 text-xs text-stone">{t(lang, "rodape").split(" · ")[1]}</p>
     </div>
   );
 
@@ -45,9 +46,9 @@ export function SurveyForm({ token, empresa, areas }: { token: string; empresa: 
     <div className="mx-auto max-w-lg text-center">
       <Image src="/brand/kokoro-ai-flat.png" alt="" width={200} height={200} className="kk-bob mx-auto w-40" />
       <p className="mt-6 text-sm text-stone">{empresa}</p>
-      <h1 className="mt-2 font-serif text-5xl leading-tight">Pesquisa de cultura <span className="italic">anônima</span></h1>
-      <p className="mt-5 text-sumi-soft">20 perguntas, cerca de 5 minutos. Ninguém vê o que você respondeu: o RH só recebe números de grupos com 5 pessoas ou mais.</p>
-      <button onClick={() => setI(0)} className="mt-10 rounded-full bg-sumi px-8 py-4 text-sm text-washi transition hover:-translate-y-px hover:bg-[#2b2b2b]">Começar</button>
+      <h1 className="mt-2 font-serif text-5xl leading-tight">{t(lang, "form_titulo")} <span className="italic">{t(lang, "form_anonima")}</span></h1>
+      <p className="mt-5 text-sumi-soft">{t(lang, "form_intro")}</p>
+      <button onClick={() => setI(0)} className="mt-10 rounded-full bg-sumi px-8 py-4 text-sm text-washi transition hover:-translate-y-px hover:bg-[#2b2b2b]">{t(lang, "form_comecar")}</button>
     </div>
   );
 
@@ -58,8 +59,8 @@ export function SurveyForm({ token, empresa, areas }: { token: string; empresa: 
   return (
     <div className="mx-auto max-w-xl">
       <div className="flex items-center justify-between text-xs text-stone">
-        <button onClick={() => setI(Math.max(-1, i - 1))} className="rounded-full px-3 py-2 hover:bg-sumi/[0.06]">← Voltar</button>
-        <span className="tabular-nums">Pergunta {i + 1} de {passos.length}</span>
+        <button onClick={() => setI(Math.max(-1, i - 1))} className="rounded-full px-3 py-2 hover:bg-sumi/[0.06]">{t(lang, "form_voltar")}</button>
+        <span className="tabular-nums">{t(lang, "form_pergunta")} {i + 1} {t(lang, "form_de")} {passos.length}</span>
       </div>
       <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-sumi/10">
         <div className="h-1 rounded-full bg-sumi transition-[width] duration-500" style={{ width: `${((i + (respondido ? 1 : 0)) / passos.length) * 100}%` }} />
@@ -79,7 +80,7 @@ export function SurveyForm({ token, empresa, areas }: { token: string; empresa: 
       {ultimo && respondido && (
         <div className="mt-10 text-center">
           <button onClick={enviar} disabled={pending} className="rounded-full bg-sumi px-8 py-4 text-sm text-washi transition hover:bg-[#2b2b2b] disabled:opacity-60">
-            {pending ? "Enviando…" : "Enviar respostas"}
+            {pending ? t(lang, "form_enviando") : t(lang, "form_enviar")}
           </button>
           {erro && <p className="mt-4 text-sm text-shu">{erro}</p>}
         </div>

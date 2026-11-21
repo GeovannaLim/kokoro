@@ -1,12 +1,15 @@
 import { KkCard, KkTitle } from "@/components/kk/Brand";
+import { t, ts } from "@/lib/i18n";
+import { getLang } from "@/lib/lang";
 
-export default function Page() {
+export default async function Page() {
+  const lang = await getLang();
   return (
     <div className="pt-10 text-center sm:pt-14">
-      <div className="mx-auto w-fit"><KkTitle line1="Assistente" mark="com IA." size="md" /></div>
+      <div className="mx-auto w-fit"><KkTitle line1={ts(lang, "assistente_l1")} mark={ts(lang, "assistente_mark")} size="md" /></div>
       <KkCard tone="washi" className="mx-auto mt-14 max-w-xl p-10">
-        <p className="text-sumi-soft">Converse com o Kokoro sobre os números da sua empresa.</p>
-        <p className="mt-3 text-sm text-stone">Em construção.</p>
+        <p className="text-sumi-soft">{ts(lang, "assistente_desc")}</p>
+        <p className="mt-3 text-sm text-stone">{t(lang, "em_construcao")}</p>
       </KkCard>
     </div>
   );
