@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { LogoBrush } from "@/components/kk/Brand";
-import data from "@/data/empresa-demo.json";
+import { getDadosEmpresa } from "@/lib/data";
 import { PlatformNav } from "./PlatformNav";
 
 export const metadata = { title: "Plataforma | Kokoro" };
 
-export default function PlatformLayout({ children }: { children: ReactNode }) {
+export default async function PlatformLayout({ children }: { children: ReactNode }) {
+  const data = await getDadosEmpresa();
   return (
     <div className="flex min-h-full flex-col">
       <header className="sticky top-0 z-40 bg-washi/80 backdrop-blur">
@@ -14,7 +15,7 @@ export default function PlatformLayout({ children }: { children: ReactNode }) {
           <Link href="/" aria-label="Kokoro, início"><LogoBrush className="h-6 w-auto sm:h-7" /></Link>
           <PlatformNav />
           <span className="rounded-full bg-washi-deep/85 px-4 py-2 text-[12px] text-sumi-soft shadow-[inset_0_0_0_1px_rgba(17,17,17,0.09)]">
-            {data.empresa} · <span className="text-stone">dados sintéticos</span>
+            {data.empresa} · <span className="text-stone">{data.sintetico ? "dados sintéticos" : "dados reais + sintéticos"}</span>
           </span>
         </div>
       </header>

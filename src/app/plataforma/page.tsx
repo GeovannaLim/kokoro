@@ -1,10 +1,9 @@
 import Image from "next/image";
 import { Hanko, KkCard, KkTitle } from "@/components/kk/Brand";
 import { Bar, CountUp, Reveal } from "@/components/kk/Motion";
-import data from "@/data/empresa-demo.json";
+import { getDadosEmpresa } from "@/lib/data";
+import type { Grupo, Idx } from "@/lib/analytics";
 
-type Idx = { apoio: number; estigma: number; abertura: number };
-type Grupo = { n: number; oculto?: boolean; indices?: Idx; perfis?: Record<string, number> };
 
 const KPIS = [
   { key: "apoio", label: "Apoio", tone: "ai", kanji: "支援", hint: "Quanto a empresa oferece suporte", better: "alto" },
@@ -12,7 +11,8 @@ const KPIS = [
   { key: "abertura", label: "Abertura", tone: "sumi", kanji: "開放", hint: "Quanto se conversa sobre saúde mental", better: "alto" },
 ] as const;
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const data = await getDadosEmpresa();
   const total = data.total as Grupo;
   const ref = data.referencia_osmi.indices as Idx;
   const areas = Object.entries(data.areas as Record<string, Grupo>).filter(([, g]) => !g.oculto && g.indices);
@@ -24,7 +24,7 @@ export default function Dashboard() {
     <div className="pt-10 sm:pt-14">
       <div className="text-center">
         <div className="mx-auto w-fit"><KkTitle line1="Diagnóstico de cultura" mark={`${data.empresa}.`} size="md" /></div>
-        <p className="mt-8 text-sm text-stone">{total.n} respostas · {data.periodo} · dados sintéticos calibrados na OSMI 2016</p>
+        <p className="mt-8 text-sm text-stone">{total.n} respostas · {data.periodo} · {data.sintetico ? "dados sintéticos calibrados na OSMI 2016" : "inclui respostas reais da pesquisa"}</p>
       </div>
 
       {/* índices */}
