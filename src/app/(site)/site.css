@@ -395,6 +395,6 @@
   .ks-grain, .ks-letterbox { display: none !important; }
 }
 
-/* contorno nos vídeos: o fundo marfim deles quase some no marfim da página */
-.ks-home__video::after, .ks-bvid::after, .ks-p3::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1.5px var(--sumi); pointer-events: none; z-index: 1; }
-.ks-home__video .ks-tag, .ks-bvid .ks-tag, .ks-p3 .ks-tag { z-index: 2; }
+/* contorno no vídeo do topo da home: o fundo marfim dele quase some no marfim da página */
+.ks-home__video::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1.5px var(--sumi); pointer-events: none; z-index: 1; }
+.ks-home__video .ks-tag { z-index: 2; }
