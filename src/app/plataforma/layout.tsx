@@ -4,6 +4,7 @@ import { LogoBrush } from "@/components/kk/Brand";
 import { getDadosEmpresa } from "@/lib/data";
 import { t, tv } from "@/lib/i18n";
 import { getLang } from "@/lib/lang";
+import { AssistantBubble } from "./AssistantBubble";
 import { PlatformMenu } from "./PlatformMenu";
 
 export const metadata = { title: "Plataforma | Kokoro" };
@@ -19,6 +20,12 @@ async function Header() {
   ];
   const empresa = `${tv(lang, data.empresa)} · ${data.sintetico ? t(lang, "sintetico") : t(lang, "misto")}`;
   return <PlatformMenu items={items} lang={lang} empresa={empresa} labels={{ menu: t(lang, "menu"), fechar: t(lang, "fechar"), idioma: t(lang, "idioma") }} />;
+}
+
+async function Assistente() {
+  const lang = await getLang();
+  return <AssistantBubble l={{ abrir: t(lang, "ass_abrir"), sub: t(lang, "ass_sub"), oi: t(lang, "ass_oi"), breve: t(lang, "ass_breve"),
+    qs: [t(lang, "ass_q1"), t(lang, "ass_q2"), t(lang, "ass_q3")], placeholder: t(lang, "ass_placeholder"), fechar: t(lang, "fechar") }} />;
 }
 
 async function Footer() {
@@ -41,6 +48,7 @@ export default function PlatformLayout({ children }: { children: ReactNode }) {
       <footer className="mx-auto w-full max-w-[1320px] px-4 pb-8 text-xs text-stone sm:px-8">
         <Suspense fallback={null}><Footer /></Suspense>
       </footer>
+      <Suspense fallback={null}><Assistente /></Suspense>
     </div>
   );
 }
