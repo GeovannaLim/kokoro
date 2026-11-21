@@ -25,7 +25,7 @@ async function Header() {
 async function Assistente() {
   const lang = await getLang();
   return <AssistantBubble lang={lang} l={{ abrir: t(lang, "ass_abrir"), sub: t(lang, "ass_sub"), oi: t(lang, "ass_oi"), breve: t(lang, "ass_breve"),
-    qs: [t(lang, "ass_q1"), t(lang, "ass_q2"), t(lang, "ass_q3")], placeholder: t(lang, "ass_placeholder"), fechar: t(lang, "fechar"), erro: t(lang, "ass_erro"), enviar: t(lang, "ass_enviar") }} />;
+    qs: [t(lang, "ass_q1"), t(lang, "ass_q2"), t(lang, "ass_q3")], placeholder: t(lang, "ass_placeholder"), fechar: t(lang, "fechar"), erro: t(lang, "ass_erro"), enviar: t(lang, "ass_enviar"), falar: t(lang, "ass_falar"), ouvindo: t(lang, "ass_ouvindo"), falando: t(lang, "ass_falando"), parar: t(lang, "ass_parar"), som: t(lang, "ass_som") }} />;
 }
 
 async function Footer() {
