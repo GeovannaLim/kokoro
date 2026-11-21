@@ -32,6 +32,7 @@ export default async function Sobre() {
           <div className="ks-sc ks-sc--red ks-card--waves ks-card--waves-bottom ks-s5 ks-reveal"><p className="h4">{t.reune}</p></div>
         </div>
       </section>
+      <div className="ks-signature" role="img" aria-label="Kokoro" />
       <SiteFx />
     </>
   );
