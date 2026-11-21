@@ -73,7 +73,7 @@ export default async function Perfis() {
             <Image src="/brand/kokoro-ai-flat.png" alt="" width={140} height={140} className="kk-bob hidden w-24 sm:block" />
           </div>
           <div className="mt-8 grid gap-12 lg:grid-cols-3">
-            {([["perf_por_area", d.areas], ["perf_por_modelo", d.modelo], ["perf_por_tempo", d.tempo_casa]] as const).map(([k, g]) => (
+            {([["perf_por_area", d.areas], ["perf_por_tempo", d.tempo_casa], ["perf_por_modelo", d.modelo]] as const).map(([k, g]) => (
               <div key={k}>
                 <p className="mb-4 font-serif text-2xl">{tp(lang, k)}</p>
                 <ProfileStack locale={loc} series={series} rows={linhas(g as Record<string, Grupo>)} />
