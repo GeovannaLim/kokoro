@@ -17,7 +17,11 @@ def indexes(E):
     out = {}
     for name, label in (("apoio", "apoio"), ("estigma", "estigma"), ("abertura", "abertura")):
         cols = [q["id"] for q in QUESTIONS if q["index"] == name]
-        out[label] = E[cols].mean(axis=1, skipna=True) * 100
+        X = E[cols].copy()
+        for q in QUESTIONS:
+            if q["index"] == name and q.get("invert"):
+                X[q["id"]] = 1.0 - X[q["id"]]
+        out[label] = X.mean(axis=1, skipna=True) * 100
     return pd.DataFrame(out)
 
 # --- perfis: treinados na OSMI (dados reais), só os índices entram no modelo ---

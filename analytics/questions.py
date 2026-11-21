@@ -57,16 +57,17 @@ def encode(q, v):
     if v is None or (isinstance(v, float) and np.isnan(v)):
         return np.nan
     m = {"yn": YN, "ynm": YNM, "leave": LEAVE, "prev": PREV, "reveal": REVEAL}[q["kind"]]
-    x = m.get(str(v).strip(), np.nan)
-    if q.get("invert") and not np.isnan(x):
-        x = 1.0 - x
-    return x
+    return m.get(str(v).strip(), np.nan)   # código da resposta original; a inversão é só no índice
 
 def build_indexes(E):
     """E: DataFrame com colunas = ids das perguntas (já codificadas 0–1). Mesma fórmula da v1."""
     out = {}
     for name, label in (("apoio", "Apoio"), ("estigma", "Estigma"), ("abertura", "Abertura")):
         cols = [q["id"] for q in QUESTIONS if q["index"] == name]
-        s = E[cols].mean(axis=1, skipna=True)
+        X = E[cols].copy()
+        for q in QUESTIONS:
+            if q["index"] == name and q.get("invert"):
+                X[q["id"]] = 1.0 - X[q["id"]]   # "me deixou com menos vontade de me abrir" conta contra a abertura (v1)
+        s = X.mean(axis=1, skipna=True)
         out[label] = (s - np.nanmin(s)) / (np.nanmax(s) - np.nanmin(s) + 1e-9) * 100
     return pd.DataFrame(out)

@@ -26,6 +26,10 @@ python analytics/generate_synthetic.py
 python analytics/build_dashboard_data.py
 ```
 
+## Banco (Neon Postgres)
+
+As migrações ficam em `scripts/migrate.mjs` e rodam sozinhas antes de cada build na Vercel (`npm run build`). Cada uma roda uma vez só (tabela `_migracoes`). Sem `DATABASE_URL`, a plataforma usa o JSON sintético.
+
 ## Estética
 
 Marfim washi, tinta sumi, índigo e vermelho; só três fontes (Cormorant Garamond, Jost e Shippori Mincho); botões em pílula, carimbos hanko e ondas seigaiha. Mascote: Kokoro, o robô de cachecol.
