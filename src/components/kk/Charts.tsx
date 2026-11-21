@@ -75,18 +75,20 @@ export function AreaMap({ points, refPoint: refPt, labels }: {
         <line x1={L} x2={W - R} y1={sy(refPt.y)} y2={sy(refPt.y)} stroke="#111" strokeDasharray="4 5" opacity=".35" />
         <text x={sx(refPt.x) + 6} y={T + 12} className="fill-stone text-[11px]">{labels.refName}</text>
         {(() => {
-          // rótulos sem colisão: empilha verticalmente quem está perto (mín. 18px entre rótulos)
+          // rótulos sem colisão: cada rótulo desce até não encostar em NENHUM já posicionado
+          // (largura estimada pelo texto, mín. 18px entre linhas)
           const pos = points.map((p) => ({ p, cx: sx(p.x), cy: sy(p.y), r: rr(p.n) })).sort((a, b) => a.cy - b.cy);
-          const placed: { x: number; y: number }[] = [];
+          const placed: { x: number; y: number; w: number }[] = [];
+          const largura = (s: string) => s.length * 7.4 + 8;
           const labelled = pos.map((o) => {
             let ly = o.cy + 4;
-            const lx = o.cx + o.r + 10;
-            for (let k = 0; k < 8; k++) {
-              const hit = placed.find((q) => Math.abs(q.y - ly) < 18 && Math.abs(q.x - lx) < 110);
+            const lx = o.cx + o.r + 10, w = largura(o.p.label);
+            for (let k = 0; k < 24; k++) {
+              const hit = placed.find((q) => Math.abs(q.y - ly) < 17.5 && lx < q.x + q.w && q.x < lx + w);
               if (!hit) break;
               ly = hit.y + 18;
             }
-            placed.push({ x: lx, y: ly });
+            placed.push({ x: lx, y: ly, w });
             return { ...o, lx, ly };
           });
           const anim = (i: number) => ({ transition: "opacity .8s ease, transform 1s cubic-bezier(.2,.7,.2,1)", transitionDelay: `${i * 90}ms`, opacity: on ? 1 : 0, transform: on ? "none" : "translateY(14px)" });
