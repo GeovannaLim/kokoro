@@ -24,7 +24,8 @@ export async function POST(req: Request) {
   if (!ultima || ultima.role !== "user") return new Response("Sem pergunta", { status: 400 });
 
   const d = await getDadosEmpresa();
-  const key = process.env.NVIDIA_API_KEY;
+  // tolera chave colada com espaços, aspas ou "Bearer " na frente
+  const key = process.env.NVIDIA_API_KEY?.trim().replace(/^["']|["']$/g, "").replace(/^Bearer\s+/i, "").trim();
   if (!key) return texto(respostaDemo(d, lang, ultima.content));
 
   const r = await fetch(URL_NVIDIA, {
