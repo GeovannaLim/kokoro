@@ -41,7 +41,7 @@ export default async function Produto() {
               <span className="ks-stamp ks-stamp--frame ks-stamp--tall">分析</span>
             </div>
             <div className="ks-card ks-p3 ks-reveal">
-              <img className="ks-media ks-media--ken" src={`/site/dash-${lang}.webp`} alt="" />
+              <video className="ks-media" src={`/site/video/kokoro-resposta-${lang}.mp4`} autoPlay loop muted playsInline aria-hidden />
               <div className="ks-tag">{t.stack}</div>
             </div>
           </div>
