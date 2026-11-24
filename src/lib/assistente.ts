@@ -15,8 +15,12 @@ const r1 = (n: number) => Math.round(n * 10) / 10;
 /** Resumo compacto que vai para o modelo. Só agregados, grupos com 5+ pessoas. */
 export function contexto(d: DadosEmpresa, lang: Lang) {
   const total = d.total as Grupo;
+  const nomePerfil = (id: string) => PERFIS[id]?.nome[lang] ?? id;
   const grupos = (g: Record<string, Grupo>) => Object.fromEntries(Object.entries(g).filter(([, x]) => !x.oculto && x.indices)
-    .map(([k, x]) => [tv(lang, k), { pessoas: x.n, ...Object.fromEntries(IND.map((i) => [i, r1(x.indices![i])])) }]));
+    .map(([k, x]) => [tv(lang, k), {
+      pessoas: x.n, ...Object.fromEntries(IND.map((i) => [i, r1(x.indices![i])])),
+      ...(x.perfis ? { perfis_percentual: Object.fromEntries(Object.entries(x.perfis).map(([id, v]) => [nomePerfil(id), r1(v)])) } : {}),
+    }]));
   return {
     empresa: tv(lang, d.empresa), respostas: total.n, periodo: d.periodo, dados_sinteticos: d.sintetico,
     escala: "0 a 100. Apoio e abertura: maior é melhor. Estigma: maior é pior.",
@@ -38,9 +42,10 @@ export function sistema(d: DadosEmpresa, lang: Lang) {
 Responda SEMPRE em ${IDIOMA[lang]}.
 
 Regras:
-- Use apenas os dados agregados abaixo. Cite números quando ajudar. Se a resposta não estiver nos dados, diga isso.
+- Use apenas os dados agregados abaixo. Cite números quando ajudar, mas NUNCA invente: só diga um número se ele estiver escrito nos dados. Se a resposta não estiver nos dados, diga isso com naturalidade.
 - Nunca faça diagnóstico, nunca tente identificar pessoas e nunca fale de grupos com menos de 5 pessoas (eles não aparecem nos dados).
-- A conversa é por voz: suas respostas são lidas em voz alta. Fale como numa conversa, em frases curtas e naturais, com no máximo uns 80 palavras. Texto simples: sem markdown, asteriscos, títulos, tabelas ou listas longas. Arredonde números (diga "45", não "44,9"), a não ser que perguntem o valor exato.
+- Se perguntarem sobre uma pessoa específica, não comente o caso dela: lembre que você não diagnostica, oriente a conversar com cuidado e a indicar apoio profissional (CVV 188), e volte para ações coletivas do plano.
+- A conversa é por voz: suas respostas são lidas em voz alta. Fale como numa conversa, em 2 a 4 frases curtas e naturais, com no máximo 70 palavras. Texto simples: sem markdown, asteriscos, títulos, tabelas ou listas longas. Arredonde números (diga "45", não "44,9"), a não ser que perguntem o valor exato.
 - Se a pergunta for vaga, responda o essencial e ofereça um próximo passo, como numa conversa.
 - Tom acolhedor e prático, para quem trabalha com pessoas. Sugira ações concretas, de preferência as do plano de ação.
 - Se alguém relatar sofrimento ou risco agora, oriente a procurar ajuda: no Brasil, CVV 188 (24h, gratuito) ou SAMU 192.
