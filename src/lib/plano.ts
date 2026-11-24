@@ -17,7 +17,7 @@ export const RISCO_TXT: Record<Risco, Tri> = {
   moderado: { pt: "Moderado", en: "Moderate", es: "Moderado" },
   alto: { pt: "Alto", en: "High", es: "Alto" },
 };
-export const RISCO_COR: Record<Risco, string> = { baixo: "#22336b", moderado: "#111111", alto: "#b5382c" };
+export const RISCO_COR: Record<Risco, string> = { baixo: "#efede8", moderado: "#efe5c9", alto: "#d4ae55" };
 
 /** Fator de risco psicossocial associado a cada índice (linguagem do inventário de riscos do PGR). */
 export const FATOR: Record<Indice, Tri> = {

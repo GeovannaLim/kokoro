@@ -62,17 +62,17 @@ export function AreaMap({ points, refPoint: refPt, labels }: {
     <div ref={box} className="relative">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" role="img" aria-label={`${labels.x} × ${labels.y}`}>
         {/* quadrantes: seguro (baixo estigma, alta abertura) e prioridade (alto estigma, baixa abertura) */}
-        <rect x={L} y={T} width={sx(refPt.x) - L} height={sy(refPt.y) - T} fill="#22336b" opacity=".06" rx="14" />
-        <rect x={sx(refPt.x)} y={sy(refPt.y)} width={W - R - sx(refPt.x)} height={H - B - sy(refPt.y)} fill="#b5382c" opacity=".07" rx="14" />
+        <rect x={L} y={T} width={sx(refPt.x) - L} height={sy(refPt.y) - T} style={{ fill: "var(--d-1)" }} opacity=".18" rx="14" />
+        <rect x={sx(refPt.x)} y={sy(refPt.y)} width={W - R - sx(refPt.x)} height={H - B - sy(refPt.y)} style={{ fill: "var(--d-3)" }} opacity=".1" rx="14" />
         <text x={L + 12} y={T + 22} className="fill-sumi-soft text-[12px]">{labels.seguro}</text>
         <text x={W - R - 12} y={H - B - 12} textAnchor="end" className="fill-sumi-soft text-[12px]">{labels.prioridade}</text>
-        {ticks(x0, x1).map((v) => <g key={`x${v}`}><line x1={sx(v)} x2={sx(v)} y1={T} y2={H - B} stroke="#111" opacity=".06" /><text x={sx(v)} y={H - B + 18} textAnchor="middle" className="fill-stone text-[11px] tabular-nums">{v}</text></g>)}
-        {ticks(y0, y1).map((v) => <g key={`y${v}`}><line x1={L} x2={W - R} y1={sy(v)} y2={sy(v)} stroke="#111" opacity=".06" /><text x={L - 10} y={sy(v) + 4} textAnchor="end" className="fill-stone text-[11px] tabular-nums">{v}</text></g>)}
+        {ticks(x0, x1).map((v) => <g key={`x${v}`}><line x1={sx(v)} x2={sx(v)} y1={T} y2={H - B} className="stroke-sumi" opacity=".06" /><text x={sx(v)} y={H - B + 18} textAnchor="middle" className="fill-stone text-[11px] tabular-nums">{v}</text></g>)}
+        {ticks(y0, y1).map((v) => <g key={`y${v}`}><line x1={L} x2={W - R} y1={sy(v)} y2={sy(v)} className="stroke-sumi" opacity=".06" /><text x={L - 10} y={sy(v) + 4} textAnchor="end" className="fill-stone text-[11px] tabular-nums">{v}</text></g>)}
         <text x={W - R} y={H - 8} textAnchor="end" className="fill-sumi-soft text-[12px]">{labels.x}</text>
         <text x={L - 44} y={T - 8} className="fill-sumi-soft text-[12px]">{labels.y}</text>
         {/* referência OSMI */}
-        <line x1={sx(refPt.x)} x2={sx(refPt.x)} y1={T} y2={H - B} stroke="#111" strokeDasharray="4 5" opacity=".35" />
-        <line x1={L} x2={W - R} y1={sy(refPt.y)} y2={sy(refPt.y)} stroke="#111" strokeDasharray="4 5" opacity=".35" />
+        <line x1={sx(refPt.x)} x2={sx(refPt.x)} y1={T} y2={H - B} className="stroke-sumi" strokeDasharray="4 5" opacity=".35" />
+        <line x1={L} x2={W - R} y1={sy(refPt.y)} y2={sy(refPt.y)} className="stroke-sumi" strokeDasharray="4 5" opacity=".35" />
         <text x={sx(refPt.x) + 6} y={T + 12} className="fill-stone text-[11px]">{labels.refName}</text>
         {(() => {
           // rótulos sem colisão: cada rótulo desce até não encostar em NENHUM já posicionado
@@ -80,10 +80,17 @@ export function AreaMap({ points, refPoint: refPt, labels }: {
           const pos = points.map((p) => ({ p, cx: sx(p.x), cy: sy(p.y), r: rr(p.n) })).sort((a, b) => a.cy - b.cy);
           const placed: { x: number; y: number; w: number }[] = [];
           const largura = (s: string) => s.length * 7.4 + 8;
+          // o rótulo também não pode cobrir NENHUMA bolinha: se encostar numa, vai para a direita dela
+          const tocaBola = (lx: number, ly: number, w: number) => pos.find((c) => {
+            const nx = Math.max(lx, Math.min(c.cx, lx + w)), ny = Math.max(ly - 12, Math.min(c.cy, ly + 4));
+            return (nx - c.cx) ** 2 + (ny - c.cy) ** 2 < (c.r + 3) ** 2;
+          });
           const labelled = pos.map((o) => {
-            let ly = o.cy + 4;
-            const lx = o.cx + o.r + 10, w = largura(o.p.label);
-            for (let k = 0; k < 24; k++) {
+            let ly = o.cy + 4, lx = o.cx + o.r + 10;
+            const w = largura(o.p.label);
+            for (let k = 0; k < 40; k++) {
+              const bola = tocaBola(lx, ly, w);
+              if (bola) { lx = bola.cx + bola.r + 8; continue; }
               const hit = placed.find((q) => Math.abs(q.y - ly) < 17.5 && lx < q.x + q.w && q.x < lx + w);
               if (!hit) break;
               ly = hit.y + 18;
@@ -94,11 +101,11 @@ export function AreaMap({ points, refPoint: refPt, labels }: {
           const anim = (i: number) => ({ transition: "opacity .8s ease, transform 1s cubic-bezier(.2,.7,.2,1)", transitionDelay: `${i * 90}ms`, opacity: on ? 1 : 0, transform: on ? "none" : "translateY(14px)" });
           return (
             <>
-              {labelled.map((o, i) => <circle key={`c${o.p.label}`} style={anim(i)} cx={o.cx} cy={o.cy} r={o.r} fill="#111" fillOpacity=".82" stroke="#f5f0e6" strokeWidth="2" />)}
+              {labelled.map((o, i) => <circle key={`c${o.p.label}`} cx={o.cx} cy={o.cy} r={o.r} style={{ ...anim(i), fill: "#b89c5c" }} fillOpacity=".8" className="stroke-washi" strokeWidth="2" />)}
               {labelled.map((o, i) => (
                 <g key={`l${o.p.label}`} style={anim(i)}>
-                  {Math.abs(o.ly - 4 - o.cy) > 6 && <line x1={o.cx + o.r * 0.7} y1={o.cy} x2={o.lx - 4} y2={o.ly - 4} stroke="#111" strokeWidth="1" opacity=".35" />}
-                  <text x={o.lx} y={o.ly} className="fill-sumi text-[13px]" paintOrder="stroke" stroke="#ebe5d8" strokeWidth="4" strokeLinejoin="round">{o.p.label}</text>
+                  {(Math.abs(o.ly - 4 - o.cy) > 6 || o.lx > o.cx + o.r + 12) && <line x1={o.cx + o.r * 0.7} y1={o.cy} x2={o.lx - 4} y2={o.ly - 4} className="stroke-sumi" strokeWidth="1" opacity=".35" />}
+                  <text x={o.lx} y={o.ly} className="fill-sumi stroke-washi text-[13px]" paintOrder="stroke" strokeWidth="4" strokeLinejoin="round">{o.p.label}</text>
                 </g>
               ))}
               {labelled.map((o) => (

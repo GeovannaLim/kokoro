@@ -45,7 +45,7 @@ export function Slides({ lang, titulo, alts, l }: { lang: string; titulo: string
         onKeyDown={(e) => { if (e.key === "ArrowRight") { e.preventDefault(); go(current() + 1); } if (e.key === "ArrowLeft") { e.preventDefault(); go(current() - 1); } }}>
         {alts.map((a, i) => (
           <li key={i} className={`ks-slide${i === atual ? " is--active" : ""}`}>
-            <img src={`/site/slides/${lang}/${String(i + 1).padStart(2, "0")}.webp`} alt={a} loading={i < 2 ? "eager" : "lazy"} draggable={false} />
+            <img src={`/site/slides/${lang}/${String(i + 1).padStart(2, "0")}.webp?v=id2`} alt={a} loading={i < 2 ? "eager" : "lazy"} draggable={false} />
           </li>
         ))}
       </ol>

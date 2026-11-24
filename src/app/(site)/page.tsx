@@ -1,75 +1,106 @@
 import Link from "next/link";
-import { Title } from "@/components/site/Title";
-import { SiteFx } from "@/components/site/SiteFx";
+import { Fx2 } from "@/components/site2/Fx2";
+import { HeroVideo } from "@/components/site2/HeroVideo";
 import { getLang } from "@/lib/lang";
-import { SITE } from "@/lib/site-i18n";
+import { SITE2 } from "@/lib/site2-i18n";
+
+export const metadata = { title: "Kokoro — saúde mental organizacional" };
 
 export default async function Inicio() {
   const lang = await getLang();
-  const t = SITE[lang].home;
+  const h = SITE2[lang].home;
+  const nav = SITE2[lang].nav;
   return (
     <>
-      <section className="ks-hero wrap">
-        <Title hero={t.hero} wide />
-        <div className="ks-home__video ks-reveal" style={{ "--k": 0 } as React.CSSProperties}>
-          <video className="ks-media" src={`/site/video/kokoro-dashboard-${lang}.mp4`} poster="/site/dash-hero.webp" autoPlay loop muted playsInline aria-label={t.hero.video} />
-        </div>
-      </section>
-
-      <section className="ks-home__telas wrap">
-        <h2 className="h5">{t.telas[0]}<br />{t.telas[1]}</h2>
-        <div className="ks-bento">
-          <div className="ks-bento__col">
-            <div className="ks-card ks-card--red ks-b1 ks-reveal">
-              <h3 className="h4">{t.dashboard[0]}</h3>
-              <p className="desc" style={{ color: "rgba(255,255,255,.82)" }}>{t.dashboard[1]}</p>
-              <div className="ks-b1__stamp"><span className="ks-stamp ks-stamp--square">指標</span></div>
-            </div>
-            <div className="ks-card ks-card--deep ks-bvid v1 ks-reveal">
-              <video className="ks-media ks-media--ken" src="/site/video/kokoro-perfis.mp4" autoPlay loop muted playsInline aria-hidden />
-              <div className="ks-tag">{t.perfis}</div>
-            </div>
-          </div>
-          <div className="ks-bento__col">
-            <div className="ks-card ks-card--paper ks-b2 ks-reveal">
-              <h3 className="h4">{t.assistente}</h3>
-              <img src="/site/kokoro-ai.webp" alt="" />
-            </div>
-            <div className="ks-card ks-card--sumi ks-b6 ks-reveal">
-              <span className="ks-stamp ks-stamp--round">報</span>
-              <h3 className="h4">{t.relatorio[0]}</h3>
-              <p className="txt">{t.relatorio[1]}</p>
-            </div>
-          </div>
-          <div className="ks-bento__col">
-            <div className="ks-card ks-card--ai ks-b3 ks-reveal">
-              <span className="ks-stamp ks-stamp--frame">匿名</span>
-              <h3 className="h2">{t.pesquisa[0]}<br />{t.pesquisa[1]}</h3>
-              <p className="desc" style={{ color: "rgba(255,255,255,.82)" }}>{t.pesquisa[2]}</p>
-            </div>
-            <div className="ks-card ks-card--deep ks-bvid v2 ks-reveal">
-              <video className="ks-media ks-media--ken" style={{ animationDelay: "-8s" }} src="/site/video/kokoro-plano.mp4" autoPlay loop muted playsInline aria-hidden />
-              <div className="ks-tag">{t.plano}</div>
-            </div>
+      {/* 1 · abertura: vídeo em tela cheia, título grande com uma palavra pequena no meio */}
+      <section className="c2-hero" id="topo">
+        <HeroVideo pausar={nav.pausar} tocar={nav.tocar} />
+        <div className="c2-hero__shade" aria-hidden />
+        <h1 className="c2-hero__title">
+          <span className="c2-line"><span>{h.h1a}</span> <small>{h.h1small}</small> <span>{h.h1b}</span></span>
+          <span className="c2-line"><span>{h.h1c}</span></span>
+        </h1>
+        <div className="c2-hero__foot">
+          <p>{h.lead}</p>
+          <div className="c2-hero__ctas">
+            <Link href="/plataforma" className="c2-btn c2-btn--light">{h.cta1}</Link>
+            <a href="#recursos" className="c2-btn c2-btn--ghost">{h.cta2}</a>
           </div>
         </div>
       </section>
 
-      <section className="ks-home__sobre wrap">
-        <h2 className="h5">{t.sobreTitulo[0]}<br />{t.sobreTitulo[1]}</h2>
-        <div className="ks-about">
-          <div className="ks-about__left ks-reveal">
-            <div className="ks-about__shape"><h3 className="h4">{t.feito[0]}<br />{t.feito[1]}</h3></div>
-            <Link href="/sobre" className="btn">{t.sobreBtn}</Link>
-          </div>
-          <div className="ks-wave ks-reveal" style={{ "--k": 1 } as React.CSSProperties} aria-hidden>
-            <img className="ks-wave__body" src="/site/kokoro-ai-body.webp" alt="" />
-            <img className="ks-wave__arm" src="/site/kokoro-ai-arm.webp" alt="" />
+      <div className="c2-sheet">
+      {/* 2 · manifesto */}
+      <section className="c2-wrap c2-statement" id="conceito">
+        <span className="c2-tag c2-reveal">{h.tag}</span>
+        <p className="c2-statement__text c2-reveal">{h.statement}</p>
+      </section>
+
+      {/* 3 · foto grande com barra flutuante */}
+      <section className="c2-wrap">
+        <div className="c2-photo c2-reveal" data-zoom>
+          <img src="/site2/conversa.webp" alt="" />
+          <div className="c2-photo__bar">
+            <span>{h.barra}</span>
+            <span className="c2-photo__pills">{h.pills.map((p) => <span key={p}>{p}</span>)}</span>
           </div>
         </div>
       </section>
-      <div className="ks-signature" role="img" aria-label="Kokoro" />
-      <SiteFx />
+
+      {/* 4 · seção escura: lista fixa à esquerda, cards com as telas reais à direita */}
+      <section className="c2-dark" id="recursos">
+        <div className="c2-wrap c2-feat">
+          <div className="c2-feat__side">
+            <h2 className="c2-h2">{h.recursosTitulo}</h2>
+            <nav className="c2-feat__list" aria-label={h.recursosTitulo}>
+              {h.features.map((f, i) => <a key={f.n} href={`#f-${f.tela}`} data-feat-link={`f-${f.tela}`} className={i === 0 ? "is-on" : ""}>{f.nome}</a>)}
+            </nav>
+            <Link href="/plataforma" className="c2-btn c2-btn--light c2-btn--sm">{h.recursosBtn}</Link>
+          </div>
+          <div className="c2-feat__cards">
+            {h.features.map((f) => (
+              <article key={f.n} id={`f-${f.tela}`} data-feat className="c2-fcard c2-reveal">
+                <p className="c2-fcard__n">{f.n}</p>
+                <div className="c2-browser"><i /><i /><i /><img src={`/site2/telas/${f.tela}-${lang}.webp?v=refino`} alt={f.nome} loading="lazy" /></div>
+                <h3 className="c2-fcard__title">{f.nome}</h3>
+                <p className="c2-fcard__desc">{f.desc}</p>
+                <ul className="c2-fcard__list">{f.itens.map((x) => <li key={x}>{x}</li>)}</ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5 · cena de cinema: foto em tela cheia, frase à direita, atalhos embaixo */}
+      <section className="c2-cinema">
+        <img className="c2-cinema__media" src="/site2/janela.webp" alt="" data-zoom />
+        <div className="c2-cinema__shade" aria-hidden />
+        <h2 className="c2-cinema__title c2-reveal">{h.cinema}</h2>
+        <div className="c2-cinema__foot">
+          <p>{h.comecar}</p>
+          <div className="c2-cinema__pills">
+            {h.features.map((f) => <Link key={f.n} href="/plataforma">{f.nome}</Link>)}
+          </div>
+        </div>
+      </section>
+
+      {/* 6 · perguntas frequentes */}
+      <section className="c2-wrap c2-faq" id="perguntas">
+        <div className="c2-faq__head c2-reveal">
+          <span className="c2-tag c2-tag--box">{h.faqTag}</span>
+          <h2 className="c2-h2"><span>{h.faqT1}</span><br /><span className="c2-muted">{h.faqT2}</span></h2>
+        </div>
+        <div className="c2-faq__list">
+          {h.faq.map(([q, a], i) => (
+            <details key={q} className="c2-faq__item c2-reveal" open={i === 0}>
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+      </div>
+      <Fx2 />
     </>
   );
 }

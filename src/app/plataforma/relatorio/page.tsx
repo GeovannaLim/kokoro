@@ -1,4 +1,5 @@
 import { connection } from "next/server";
+import { Suspense } from "react";
 import { Hanko, KkTitle, LogoBrush } from "@/components/kk/Brand";
 import type { Grupo, Idx } from "@/lib/analytics";
 import { getDadosEmpresa } from "@/lib/data";
@@ -10,10 +11,16 @@ import { PrintButton } from "./PrintButton";
 const INDICES: Indice[] = ["apoio", "estigma", "abertura"];
 
 function Chip({ r, lang }: { r: Risco; lang: "pt" | "en" | "es" }) {
-  return <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] text-white" style={{ background: RISCO_COR[r] }}><i className="h-1.5 w-1.5 rounded-full bg-white/80" />{RISCO_TXT[r][lang]}</span>;
+  const claro = true; // texto escuro em todos (o alto é mostarda: a cor de "olhe aqui")
+  return <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${claro ? "text-sumi shadow-[inset_0_0_0_1px_rgba(41,37,33,.12)]" : "text-white"}`} style={{ background: RISCO_COR[r] }}><i className={`h-1.5 w-1.5 rounded-full ${r === "alto" ? "bg-[#5a4510]" : r === "moderado" ? "bg-[#c2a668]" : "bg-[#9a9088]"}`} />{RISCO_TXT[r][lang]}</span>;
 }
 
-export default async function Relatorio() {
+/** A data de emissão é a do momento do pedido: por isso o conteúdo fica dentro de um Suspense. */
+export default function Relatorio() {
+  return <Suspense fallback={<div className="h-[60vh]" />}><Conteudo /></Suspense>;
+}
+
+async function Conteudo() {
   await connection(); // a data de emissão é a do momento do pedido
   const [lang, d] = await Promise.all([getLang(), getDadosEmpresa()]);
   const loc = LOCALE[lang];

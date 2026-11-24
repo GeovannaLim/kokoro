@@ -1,11 +1,13 @@
-import { Hanko, KkCard, KkTitle } from "@/components/kk/Brand";
-import { Reveal } from "@/components/kk/Motion";
+import { KkCard, KkTitle } from "@/components/kk/Brand";
+import { CountUp, Reveal } from "@/components/kk/Motion";
 import { getDadosEmpresa } from "@/lib/data";
 import { SERIES } from "@/lib/colors";
 import { LOCALE, t, tp, tq, ts, tv } from "@/lib/i18n";
 import { getLang } from "@/lib/lang";
 import { DONO, montarPlano, prioridades } from "@/lib/plano";
 import { Checklist, type AcaoView } from "./Checklist";
+
+const PASSO = { pt: ["Seu próximo passo", "ações em 30 dias", "no plano completo, de 30 a 90 dias"], en: ["Your next step", "actions in 30 days", "in the full plan, from 30 to 90 days"], es: ["Tu próximo paso", "acciones en 30 días", "en el plan completo, de 30 a 90 días"] } as const;
 
 export default async function Plano() {
   const [lang, d] = await Promise.all([getLang(), getDadosEmpresa()]);
@@ -32,10 +34,12 @@ export default async function Plano() {
         <Reveal>
           <KkCard tone="sumi" className="flex h-full min-h-[200px] flex-col justify-between p-8">
             <div className="flex items-start justify-between">
-              <p className="font-serif text-3xl">{ts(lang, "plano_l1")} {ts(lang, "plano_mark")}</p>
-              <Hanko text="計画" size={58} rotate={-3} />
+              <p className="text-3xl font-medium tracking-[-0.03em]">{PASSO[lang][0]}</p>
             </div>
-            <p className="font-serif text-7xl leading-none">{itens.length}<span className="ml-3 text-2xl text-white/70">{tp(lang, "plano_acoes")}</span></p>
+            <div>
+              <p className="text-7xl leading-none font-medium tracking-[-0.05em]"><CountUp value={itens.filter((i) => i.prazo === 30).length} locale={LOCALE[lang]} /><span className="ml-3 text-2xl font-normal tracking-normal text-sumi-soft">{PASSO[lang][1]}</span></p>
+              <p className="mt-3 text-sm text-stone">{itens.length} {tp(lang, "plano_acoes")} {PASSO[lang][2]}</p>
+            </div>
           </KkCard>
         </Reveal>
         <Reveal k={1}>
@@ -44,7 +48,7 @@ export default async function Plano() {
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {prio.map((p) => (
                 <div key={p.nome}>
-                  <p className="font-serif text-4xl">{tv(lang, p.nome)}</p>
+                  <p className="text-4xl font-medium tracking-[-0.035em]">{tv(lang, p.nome)}</p>
                   <p className="mt-1 text-[13px] text-white/80">{t(lang, "estigma")} {fmt(p.g.indices!.estigma)} · {t(lang, "abertura")} {fmt(p.g.indices!.abertura)} · {t(lang, "apoio")} {fmt(p.g.indices!.apoio)}</p>
                 </div>
               ))}

@@ -1,62 +1,85 @@
 import { Slides } from "@/components/site/Slides";
-import { Specs } from "@/components/site/Specs";
-import { Count, Title } from "@/components/site/Title";
+import { Fx2 } from "@/components/site2/Fx2";
 import { LOCALE } from "@/lib/i18n";
-import { SiteFx } from "@/components/site/SiteFx";
 import { getLang } from "@/lib/lang";
 import { GITHUB, SITE } from "@/lib/site-i18n";
+import { SITE2 } from "@/lib/site2-i18n";
 
 export const metadata = { title: "Produto | Kokoro — saúde mental organizacional" };
+
+/** Número que conta até o valor quando aparece (o Fx2 anima os [data-count]). */
+function N({ to, dec = 0, suf = "", loc }: { to: number; dec?: number; suf?: string; loc: string }) {
+  return <span data-count={to} data-dec={dec} data-suf={suf} data-loc={loc}>{to.toLocaleString(loc, { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf}</span>;
+}
 
 export default async function Produto() {
   const lang = await getLang();
   const t = SITE[lang].produto;
+  const p = SITE2[lang].produto;
   const loc = LOCALE[lang];
   return (
     <>
-      <section className="ks-hero wrap">
-        <Title hero={t.hero} />
-        <Specs specs={t.specs} l={{ titulo: t.specsTitulo, pdf: t.pdf, pdfHref: t.pdfHref, cores: t.cores }} />
+      <section className="c2-wrap c2-pagehead">
+        <span className="c2-tag c2-reveal">{p.tag}</span>
+        <h1 className="c2-h1 c2-reveal"><span>{p.h1a}</span><br /><span className="c2-muted">{p.h1b}</span></h1>
+        <p className="c2-lead c2-reveal">{p.lead}</p>
       </section>
 
-      <section className="wrap">
-        <div className="ks-pbento">
-          <div className="ks-card ks-card--ai ks-p1 ks-reveal">
-            <div className="ks-p1__head">
-              <span className="ks-stamp ks-stamp--seal ks-stamp--keep">検証済</span><span className="ring" />
-              <h3 className="h4">{t.acuracia[0]}</h3>
-              <p className="txt">{t.acuracia[1]}</p>
-            </div>
-            <div className="ks-code">
-              {t.metricas.map(([a, b, v]) => (
-                <p key={a}><span>{a}</span><b><Count to={v} dec={3} locale={loc} /></b><i className="ks-bar" style={{ "--v": v } as React.CSSProperties} /></p>
-              ))}
-              {t.ficha.map(([a, b]) => <p key={a}><span>{a}</span>{b}</p>)}
-            </div>
+      <section className="c2-wrap">
+        <div className="c2-browser c2-browser--big c2-reveal" data-zoom><i /><i /><i /><img src={`/site2/telas/dashboard-${lang}.webp?v=refino`} alt="Dashboard" /></div>
+      </section>
+
+      {/* especificações: cada grupo numa linha, com fios bronze */}
+      <section className="c2-wrap c2-specs">
+        <div className="c2-specs__head c2-reveal">
+          <h2 className="c2-h2">{t.specsTitulo}</h2>
+          <a className="c2-btn c2-btn--line c2-btn--sm" href={t.pdfHref} download>{t.pdf}</a>
+        </div>
+        {t.specs.map((s) => (
+          <div key={s.nome} className="c2-specs__group c2-reveal">
+            <h3>{s.nome}</h3>
+            <dl>{s.linhas.map(([a, b]) => <div key={a}><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div className="ks-card ks-card--sumi ks-p2 ks-reveal">
-              <h3 className="h4">{t.modelos[0]}</h3>
-              <p className="txt">{t.modelos[1]}</p>
-              <span className="ks-stamp ks-stamp--frame ks-stamp--tall">分析</span>
-            </div>
-            <div className="ks-card ks-p3 ks-reveal">
-              <video className="ks-media" src={`/site/video/kokoro-resposta-${lang}.mp4`} autoPlay loop muted playsInline aria-hidden />
-              <div className="ks-tag">{t.stack}</div>
-            </div>
-          </div>
-          <div className="ks-card ks-card--red ks-card--waves ks-card--waves-top ks-p4 ks-reveal">
-            <h3 className="h4">{t.codigo[0]}</h3>
-            <p className="txt">{t.codigo[1]}</p>
-            <a className="txt" href={GITHUB} target="_blank" rel="noreferrer">github.com/GeovannaLim/kokoro</a>
-            <div className="ks-arch"><video src="/site/video/kokoro-codigo.mp4" autoPlay loop muted playsInline aria-hidden /></div>
+        ))}
+      </section>
+
+      {/* por dentro: modelos e código, na seção escura */}
+      <section className="c2-dark c2-dark--round">
+        <div className="c2-wrap">
+          <span className="c2-tag c2-tag--dark c2-reveal">{p.modeloTag}</span>
+          <h2 className="c2-h2 c2-reveal" style={{ marginTop: 20 }}>{p.modeloTitulo}</h2>
+          <div className="c2-bento">
+            <article className="c2-dcard c2-reveal">
+              <h3>{t.acuracia[0]}</h3>
+              <p className="c2-dcard__txt">{t.acuracia[1]}</p>
+              <div className="c2-metrics">
+                {t.metricas.map(([a, , v]) => (
+                  <div key={a}><p><span>{a}</span><b><N to={v} dec={3} loc={loc} /></b></p><i style={{ "--v": v } as React.CSSProperties} /></div>
+                ))}
+              </div>
+              <dl className="c2-ficha">{t.ficha.map(([a, b]) => <div key={a}><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+            </article>
+            <article className="c2-dcard c2-reveal">
+              <h3>{t.modelos[0]}</h3>
+              <p className="c2-dcard__txt">{t.modelos[1]}</p>
+              <p className="c2-dcard__big"><N to={1433} loc={loc} /></p>
+              <p className="c2-dcard__cap">OSMI 2016 · CC BY 4.0</p>
+            </article>
+            <article className="c2-dcard c2-reveal">
+              <h3>{t.codigo[0]}</h3>
+              <p className="c2-dcard__txt">{t.codigo[1]}</p>
+              <span className="c2-pill">{t.stack}</span>
+              <a className="c2-btn c2-btn--light c2-btn--sm" href={GITHUB} target="_blank" rel="noreferrer">github.com/GeovannaLim/kokoro</a>
+            </article>
           </div>
         </div>
       </section>
 
-      <Slides lang={lang} titulo={t.apresentacao} alts={t.slidesAlt} l={{ anterior: t.anterior, proximo: t.proximo }} />
-      <div className="ks-signature" role="img" aria-label="Kokoro" />
-      <SiteFx />
+      <div className="c2-slideswrap">
+        <span className="c2-tag c2-reveal">{p.slidesTag}</span>
+        <Slides lang={lang} titulo={t.apresentacao} alts={t.slidesAlt} l={{ anterior: t.anterior, proximo: t.proximo }} />
+      </div>
+      <Fx2 />
     </>
   );
 }
