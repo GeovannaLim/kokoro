@@ -7,7 +7,7 @@ import { LANGS, type Lang } from "@/lib/i18n";
 const URL_NVIDIA = "https://integrate.api.nvidia.com/v1/chat/completions";
 const MODELO = process.env.NVIDIA_MODEL || "google/gemma-4-31b-it";
 /** Teste temporário de velocidade: permite escolher entre modelos gratuitos da lista (sem outros efeitos). */
-const TESTE = ["google/gemma-4-31b-it", "google/gemma-3-27b-it", "meta/llama-4-maverick-17b-128e-instruct", "mistralai/mistral-small-3.1-24b-instruct-2503", "meta/llama-3.1-8b-instruct", "qwen/qwen3-next-80b-a3b-instruct"];
+const TESTE = ["google/gemma-4-31b-it", "google/gemma-3-12b-it", "nvidia/nemotron-3.5-lightning-30b-a3b", "nvidia/nemotron-3.5-bolt-e4b", "z-ai/glm-5.3-flash", "minimaxai/minimax-m3.1-flash", "mistralai/mistral-large-4-1t-a52b"];
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -42,8 +42,8 @@ export async function POST(req: Request) {
       ...(semPensar ? { chat_template_kwargs: { enable_thinking: false, thinking: false } } : {}),
       messages: [{ role: "system", content: sistema(d, lang) }, ...messages],
     }),
-    signal: AbortSignal.timeout(20000),
-  }).catch(() => null);
+    signal: AbortSignal.timeout(30000),
+  }).catch((e) => { console.error("NVIDIA falhou/tempo", modelo, String(e).slice(0, 120)); return null; });
 
   // limite de uso (40/min no plano grátis) ou erro: cai no modo demonstração em vez de quebrar
   if (!r || !r.ok || !r.body) {
