@@ -22,6 +22,13 @@ const recCtor = (): RecCtor | null => {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 };
 const noop = () => () => {};
+
+/** Avisos de voz: quando o navegador ou o microfone não deixam ouvir, dizemos isso em vez de desligar em silêncio. */
+const AVISO: Record<Lang, Record<"bloqueado" | "rede" | "semMic" | "naoOuvi", string>> = {
+  pt: { bloqueado: "O microfone está bloqueado. Libere o acesso no cadeado da barra de endereço e toque de novo.", rede: "Este navegador não oferece reconhecimento de voz. Use Chrome, Edge ou Safari, ou escreva sua pergunta.", semMic: "Nenhum microfone encontrado.", naoOuvi: "Não ouvi nada. Toque no microfone e fale de novo." },
+  en: { bloqueado: "The microphone is blocked. Allow access from the lock in the address bar and tap again.", rede: "This browser doesn't offer speech recognition. Use Chrome, Edge or Safari, or type your question.", semMic: "No microphone found.", naoOuvi: "I didn't hear anything. Tap the mic and speak again." },
+  es: { bloqueado: "El micrófono está bloqueado. Permite el acceso en el candado de la barra de direcciones y toca de nuevo.", rede: "Este navegador no ofrece reconocimiento de voz. Usa Chrome, Edge o Safari, o escribe tu pregunta.", semMic: "No se encontró ningún micrófono.", naoOuvi: "No escuché nada. Toca el micrófono y habla de nuevo." },
+};
 /** Tira do áudio o que é só nota visual (modo demonstração). */
 const paraFala = (s: string) => s.replace(/\((Modo|Demo)[^)]*\)/g, "").trim();
 
@@ -35,6 +42,7 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
   const [falando, setFalando] = useState(false);
   const [voz, setVoz] = useState(false);          // conversa por voz ligada (mãos livres)
   const [som, setSom] = useState(true);           // Kokoro responde em voz alta
+  const [aviso, setAviso] = useState("");         // problema de voz explicado ao usuário
   const temVoz = useSyncExternalStore(noop, () => !!recCtor() && "speechSynthesis" in window, () => false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -94,25 +102,37 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
     rec.lang = LOCALE[lang];
     rec.interimResults = true;
     rec.continuous = false;
-    let final = "";
+    let final = "", parcial = "", erro = "", ouviuAlgo = false;
     rec.onresult = (e) => {
-      let parcial = "";
+      ouviuAlgo = true;
+      parcial = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const r = e.results[i];
         if (r.isFinal) final += r[0].transcript; else parcial += r[0].transcript;
       }
       setTxt((final + parcial).trim());
     };
-    rec.onerror = (e) => { if (e.error === "no-speech" || e.error === "not-allowed" || e.error === "aborted") { vozRef.current = false; setVoz(false); } };
+    rec.onerror = (e) => { erro = e.error; };
     rec.onend = () => {
       setOuvindo(false);
       recRef.current = null;
-      if (final.trim()) perguntar(final);
-      else if (vozRef.current) { vozRef.current = false; setVoz(false); }
+      // o Safari às vezes encerra sem marcar o trecho como final: aproveitamos o último parcial
+      const dito = (final || parcial).trim();
+      if (dito) { perguntar(dito); return; }
+      const eraConversa = vozRef.current;
+      vozRef.current = false;
+      setVoz(false);
+      const a = AVISO[lang];
+      if (erro === "not-allowed" || erro === "service-not-allowed") setAviso(a.bloqueado);
+      else if (erro === "network" || erro === "language-not-supported") setAviso(a.rede);
+      else if (erro === "audio-capture") setAviso(a.semMic);
+      // "não ouvi" só na primeira escuta; no meio da conversa, silêncio apenas encerra o modo voz
+      else if ((erro === "no-speech" || !erro) && !ouviuAlgo && eraConversa && msgsRef.current.length === 0) setAviso(a.naoOuvi);
     };
     recRef.current = rec;
+    setAviso("");
     setOuvindo(true);
-    rec.start();
+    try { rec.start(); } catch { setOuvindo(false); recRef.current = null; vozRef.current = false; setVoz(false); setAviso(AVISO[lang].rede); }
   }
 
   function micClick() {
@@ -215,7 +235,7 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
 
         <form className="shrink-0 border-t border-white/10 p-3" onSubmit={(e) => { e.preventDefault(); perguntar(txt); }}>
           <div className="flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.07] py-1.5 pr-1.5 pl-4 shadow-[inset_0_1px_0_rgba(255,255,255,.08)]">
-            <input ref={inputRef} value={txt} onChange={(e) => setTxt(e.target.value)} maxLength={500} placeholder={ouvindo ? l.ouvindo : l.placeholder} aria-label={l.placeholder}
+            <input ref={inputRef} value={txt} onChange={(e) => { setTxt(e.target.value); setAviso(""); }} maxLength={500} placeholder={ouvindo ? l.ouvindo : l.placeholder} aria-label={l.placeholder}
               className="min-w-0 flex-1 bg-transparent text-[14px] text-white outline-none placeholder:text-white/45" />
             {temVoz && (
               <button type="button" onClick={micClick} aria-pressed={voz} aria-label={voz ? l.parar : l.falar} title={voz ? l.parar : l.falar}
@@ -229,7 +249,9 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
             <button type="submit" disabled={busy || !txt.trim() || ouvindo} aria-label={l.enviar}
               className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[#1a1b1d] transition disabled:bg-white/15 disabled:text-white/40">↑</button>
           </div>
-          <p className="pt-2 text-center text-[11px] text-white/45">{l.breve}</p>
+          {aviso
+            ? <p role="status" className="pt-2 text-center text-[12px] leading-snug text-[#e3cf93]">{aviso}</p>
+            : <p className="pt-2 text-center text-[11px] text-white/45">{l.breve}</p>}
         </form>
       </section>
 
