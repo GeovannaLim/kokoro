@@ -22,6 +22,10 @@ const recCtor = (): RecCtor | null => {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 };
 const noop = () => () => {};
+/** Voz NVIDIA de cada idioma (Magpie TTS); a do navegador fica de reserva. */
+const VOZ: Record<Lang, string> = { pt: "Magpie-Multilingual.PT-BR.Isabela", en: "Magpie-Multilingual.EN-US.Mia.Calm", es: "Magpie-Multilingual.ES-US.Isabela.Calm" };
+/** WAV mudo de 1 amostra: tocado no clique para o Safari liberar o áudio que virá depois. */
+const SILENCIO = "data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQIAAAAAAA==";
 
 /** Avisos de voz: quando o navegador ou o microfone não deixam ouvir, dizemos isso em vez de desligar em silêncio. */
 const AVISO: Record<Lang, Record<"bloqueado" | "rede" | "semMic" | "naoOuvi", string>> = {
@@ -50,7 +54,10 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
   const recRef = useRef<Rec | null>(null);
   const vozRef = useRef(false);
   const somRef = useRef(true);
-  const ultimaFala = useRef<SpeechSynthesisUtterance | null>(null);
+  const fila = useRef<Promise<void>>(Promise.resolve()); // falas tocam uma depois da outra
+  const geracao = useRef(0);                               // muda a cada "cala a boca": falas antigas desistem
+  const pendentes = useRef(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const msgsRef = useRef<Msg[]>([]);
   msgsRef.current = msgs;
 
@@ -72,32 +79,82 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
     setVoz(false);
     recRef.current?.abort();
     recRef.current = null;
-    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    calar();
     setOuvindo(false);
+  }
+
+  /** Interrompe tudo o que está falando ou na fila. */
+  function calar() {
+    geracao.current++;
+    pendentes.current = 0;
+    fila.current = Promise.resolve();
+    audioRef.current?.pause();
+    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     setFalando(false);
   }
 
-  function falar(trecho: string, fim?: () => void) {
+  /** Pede o áudio da voz NVIDIA; null se não der (sem chave, cota, rede): aí usamos a voz do navegador. */
+  async function buscarAudio(s: string): Promise<Blob | null> {
+    try {
+      const r = await fetch("/api/voz", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ texto: s, lang, voz: VOZ[lang] }), signal: AbortSignal.timeout(9000) });
+      const b = r.ok ? await r.blob() : null;
+      return b && b.size > 1000 ? b : null;
+    } catch { return null; }
+  }
+
+  function tocar(b: Blob): Promise<boolean> {
+    return new Promise((res) => {
+      const a = audioRef.current ?? (audioRef.current = new Audio());
+      const url = URL.createObjectURL(b);
+      const fim = (ok: boolean) => { a.onended = a.onerror = null; URL.revokeObjectURL(url); res(ok); };
+      a.onended = () => fim(true);
+      a.onerror = () => fim(false);
+      a.src = url;
+      a.play().catch(() => fim(false));
+    });
+  }
+
+  function falarNavegador(s: string): Promise<void> {
+    return new Promise((res) => {
+      if (!("speechSynthesis" in window)) { res(); return; }
+      const u = new SpeechSynthesisUtterance(s);
+      u.lang = LOCALE[lang];
+      const vozes = window.speechSynthesis.getVoices().filter((v) => v.lang.replace("_", "-").startsWith(LOCALE[lang].slice(0, 2)));
+      u.voice = vozes.find((v) => v.lang.replace("_", "-") === LOCALE[lang] && /google|natural|premium|enhanced|luciana|samantha/i.test(v.name))
+        ?? vozes.find((v) => v.lang.replace("_", "-") === LOCALE[lang]) ?? vozes[0] ?? null;
+      u.rate = 1.03;
+      u.onend = u.onerror = () => res();
+      window.speechSynthesis.speak(u);
+    });
+  }
+
+  /** Roda fn quando tudo o que está na fila terminar de ser falado. */
+  function depoisDaFala(fn: () => void) {
+    const g = geracao.current;
+    fila.current = fila.current.then(() => { if (g === geracao.current) fn(); });
+  }
+
+  /** Fala um trecho: o áudio já começa a ser gerado agora, mas toca na ordem, depois dos anteriores. */
+  function falar(trecho: string) {
     const s = paraFala(trecho);
-    if (!s || !somRef.current) { fim?.(); return; }
-    const u = new SpeechSynthesisUtterance(s);
-    u.lang = LOCALE[lang];
-    const vozes = window.speechSynthesis.getVoices().filter((v) => v.lang.replace("_", "-").startsWith(LOCALE[lang].slice(0, 2)));
-    u.voice = vozes.find((v) => v.lang.replace("_", "-") === LOCALE[lang] && /google|natural|premium|enhanced|luciana|samantha/i.test(v.name))
-      ?? vozes.find((v) => v.lang.replace("_", "-") === LOCALE[lang]) ?? vozes[0] ?? null;
-    u.rate = 1.03;
-    u.onstart = () => setFalando(true);
-    u.onend = u.onerror = () => {
-      if (ultimaFala.current === u) { ultimaFala.current = null; setFalando(false); fim?.(); }
-    };
-    ultimaFala.current = u;
-    window.speechSynthesis.speak(u);
+    if (!s || !somRef.current) return;
+    const g = geracao.current;
+    const audio = buscarAudio(s);
+    pendentes.current++;
+    fila.current = fila.current.then(async () => {
+      if (g !== geracao.current) return;
+      const b = await audio;
+      if (g !== geracao.current) return;
+      setFalando(true);
+      if (!b || !(await tocar(b))) { if (g === geracao.current) await falarNavegador(s); }
+      if (g === geracao.current && --pendentes.current <= 0) setFalando(false);
+    });
   }
 
   function ouvir() {
     const C = recCtor();
     if (!C || busy) return;
-    window.speechSynthesis.cancel();
+    calar();
     const rec = new C();
     rec.lang = LOCALE[lang];
     rec.interimResults = true;
@@ -139,6 +196,9 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
     if (voz) { pararVoz(); return; }
     // no Safari, a primeira fala precisa nascer de um clique: "destrava" o áudio aqui
     window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+    const a = audioRef.current ?? (audioRef.current = new Audio());
+    a.src = SILENCIO;
+    a.play().catch(() => {});
     vozRef.current = true;
     setVoz(true);
     ouvir();
@@ -180,9 +240,8 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
       setBusy(false);
       if (porVoz && vozRef.current) {
         const resto = acc.slice(falado);
-        if (paraFala(resto) && somRef.current) falar(resto, continuar);
-        else if (ultimaFala.current) ultimaFala.current.onend = () => { ultimaFala.current = null; setFalando(false); continuar(); };
-        else continuar();
+        falar(resto);
+        depoisDaFala(continuar);
       } else inputRef.current?.focus();
     }
   }
@@ -205,7 +264,7 @@ export function AssistantBubble({ l, lang }: { l: L; lang: Lang }) {
           </div>
           {temVoz && (
             <button type="button" aria-pressed={som} aria-label={l.som} title={l.som}
-              onClick={() => { const v = !som; setSom(v); somRef.current = v; if (!v) window.speechSynthesis.cancel(); }}
+              onClick={() => { const v = !som; setSom(v); somRef.current = v; if (!v) calar(); }}
               className="grid h-9 w-9 place-items-center rounded-full text-white/75 hover:bg-white/10">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4Z" />
