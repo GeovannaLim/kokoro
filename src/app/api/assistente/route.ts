@@ -6,6 +6,8 @@ import { LANGS, type Lang } from "@/lib/i18n";
  *  Sem NVIDIA_API_KEY, responde em modo demonstração com os próprios números. */
 const URL_NVIDIA = "https://integrate.api.nvidia.com/v1/chat/completions";
 const MODELO = process.env.NVIDIA_MODEL || "google/gemma-4-31b-it";
+/** Teste temporário de velocidade: permite escolher entre modelos gratuitos da lista (sem outros efeitos). */
+const TESTE = ["google/gemma-4-31b-it", "google/gemma-3-27b-it", "meta/llama-4-maverick-17b-128e-instruct", "mistralai/mistral-small-3.1-24b-instruct-2503", "meta/llama-3.1-8b-instruct", "qwen/qwen3-next-80b-a3b-instruct"];
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -28,10 +30,19 @@ export async function POST(req: Request) {
   const key = process.env.NVIDIA_API_KEY?.trim().replace(/^["']|["']$/g, "").replace(/^Bearer\s+/i, "").trim();
   if (!key) return texto(respostaDemo(d, lang, ultima.content));
 
+  const pedido = req.headers.get("x-kokoro-modelo");
+  const modelo = pedido && TESTE.includes(pedido) ? pedido : MODELO;
+  const semPensar = req.headers.get("x-kokoro-pensar") !== "1";
   const r = await fetch(URL_NVIDIA, {
     method: "POST",
     headers: { authorization: `Bearer ${key}`, "content-type": "application/json", accept: "text/event-stream" },
-    body: JSON.stringify({ model: MODELO, stream: true, temperature: 0.4, max_tokens: 700, messages: [{ role: "system", content: sistema(d, lang) }, ...messages] }),
+    body: JSON.stringify({
+      model: modelo, stream: true, temperature: 0.4, max_tokens: 500,
+      // resposta direta, sem a fase de "raciocínio" silencioso (que atrasava a primeira palavra em ~15 s)
+      ...(semPensar ? { chat_template_kwargs: { enable_thinking: false, thinking: false } } : {}),
+      messages: [{ role: "system", content: sistema(d, lang) }, ...messages],
+    }),
+    signal: AbortSignal.timeout(20000),
   }).catch(() => null);
 
   // limite de uso (40/min no plano grátis) ou erro: cai no modo demonstração em vez de quebrar
@@ -60,5 +71,5 @@ export async function POST(req: Request) {
       }
     },
   }));
-  return new Response(stream, { headers: { "content-type": "text/plain; charset=utf-8", "x-kokoro-modo": "ia", "cache-control": "no-store" } });
+  return new Response(stream, { headers: { "content-type": "text/plain; charset=utf-8", "x-kokoro-modo": "ia", "x-kokoro-modelo-usado": modelo, "cache-control": "no-store" } });
 }
