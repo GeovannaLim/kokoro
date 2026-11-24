@@ -47,12 +47,14 @@ export async function GET() {
 export async function POST(req: Request) {
   const key = chave();
   if (!key) return new Response(null, { status: 503 });
-  const { texto, lang: l } = (await req.json().catch(() => ({}))) as { texto?: string; lang?: string };
+  const { texto, lang: l, voz: pedida } = (await req.json().catch(() => ({}))) as { texto?: string; lang?: string; voz?: string };
   const lang: Lang = l === "en" || l === "es" ? l : "pt";
   const t = String(texto ?? "").replace(/\s+/g, " ").trim().slice(0, 600);
   if (!t) return new Response(null, { status: 400 });
   try {
-    const voz = escolher(await vozes(key), lang);
+    const nomes = await vozes(key);
+    // permite escolher outra voz da lista (para comparar), nunca um valor arbitrário
+    const voz = pedida && nomes.includes(pedida) ? pedida : escolher(nomes, lang);
     if (!voz) return new Response(null, { status: 503, headers: { "x-kokoro-voz": "sem voz no idioma" } });
     const f = new FormData();
     f.set("text", t);
